@@ -1,4 +1,6 @@
-# 环形约束覆盖数组的精确界、整数规划间隙与渐近极限理论
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22935005.svg)](https://doi.org/10.5281/zenodo.22935005)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Verification: PASS](https://img.shields.io/badge/Verification-ALL%20PASS-brightgreen.svg)]()
 
 ## 项目简介
 
