@@ -4,6 +4,8 @@
 
 本项目汇总并统一了二元、强度 2、指数 2（$\lambda=2$）、在环图 $C_n$ 上禁止相邻同时开启的约束覆盖数组的完整理论研究、机械化验证程序以及论文手稿。
 
+> 📄 **学术预印本与论文手稿**：完整学术论文预印本（面向 *Journal of Combinatorial Designs* / *Discrete Mathematics*）可直接查阅 [**paper.pdf**](paper.pdf)（LaTeX 源码：[`paper.tex`](paper.tex)）。
+
 ---
 
 ## 核心定理总览

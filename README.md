@@ -3,6 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Verification: PASS](https://img.shields.io/badge/Verification-ALL%20PASS-brightgreen.svg)]()
+[![Preprint: PDF](https://img.shields.io/badge/Preprint-PDF-red.svg)](paper.pdf)
+
+> 📄 **Academic Manuscript**: The complete paper ready for peer review (*Journal of Combinatorial Designs* / *Discrete Mathematics*) is available as [**paper.pdf**](paper.pdf) (LaTeX source: [`paper.tex`](paper.tex)).
 
 This repository contains the unified research monograph, exact mechanical certificates, and verification software for index-2 ($\lambda=2$) constrained covering arrays on cycle topologies $C_n$ avoiding adjacent active switches.
 
@@ -54,6 +57,7 @@ To run individual verifiers:
 ## 3. Repository Architecture
 
 ```text
+├── paper.pdf                   # Compiled publication preprint PDF
 ├── paper.tex                   # Standalone publication-ready LaTeX manuscript (JCD / DM format)
 ├── theorem_ledger.md           # Single Source of Truth for all propositions
 ├── solve_c20.py                # C20 exact CP-SAT solver and verifier
