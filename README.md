@@ -20,9 +20,10 @@ This repository contains the unified research monograph, exact mechanical certif
 | **[T6] Asymptotic Gap Divergence** | $n \to \infty, \lambda \ge 1$ | $N_\lambda(n) = \Theta_\lambda(\log n) \implies G_\lambda(n) = N_\lambda(n) - LP_\lambda(n) \to \infty$ | Sphere-packing / Probabilistic Method / CAFE |
 | **[T7] $C_{17}$ Exact Optimum** | $n = 17$ | $LP(17) = 12, N(17) = 13$ (54,310-node exact DFS exclusion) | `verify_c17.py` |
 | **[T8] $C_{19}$ Exact Optimum** | $n = 19$ | $LP(19) = 12, N(19) = 13$ (726,693-node exact DFS exclusion); odd jump threshold $n^* \ge 21$ | `verify_c19.py` |
-| **[T9] Continuous Plateau $[13, 21]$** | $n \in [13, 21]$ | $N(n) = 13$ for all 9 consecutive integers ($C_{16}, C_{18}, C_{20}, C_{21}$ exact witnesses); global threshold $n^* \ge 22$ | `verify_even_cycles_and_c21.py` |
+| **[T9] Continuous Plateau $[13, 22]$** | $n \in [13, 22]$ | $N(n) = 13$ for all 10 consecutive integers ($C_{16}, C_{18}, C_{20}, C_{21}, C_{22}$ exact witnesses); global threshold $n^* \ge 23$ | `verify_even_cycles_and_c21.py` |
 | **[T10] $C_{21}$ Exact Optimum** | $n = 21$ | $LP(21) = 12, N(21) = 13$ (CP-SAT tight exclusion & explicit 13-row witness) | `verify_even_cycles_and_c21.py`, `solve_c21.py` |
 | **[T11] $C_{20}$ Exact Optimum** | $n = 20$ | $LP(20) = 12, N(20) = 13$ (CP-SAT tight exclusion & explicit 13-row witness) | `verify_even_cycles_and_c21.py`, `solve_c20.py` |
+| **[T12] $C_{22}$ Exact Optimum & Plateau Saturation** | $n = 22$ | $LP(22) = 12, N(22) = 13$ (CP-SAT tight exclusion & explicit 13-row witness); $L_{\text{tight}}(13) = 22$ | `verify_even_cycles_and_c21.py`, `solve_c22.py` |
 
 ---
 
@@ -42,9 +43,11 @@ To run individual verifiers:
 - **$C_{15}$ $\mathbb{F}_2$ Rank Certificate**: `python verifiers/verify_c15.py`
 - **$C_{17}$ Exact DFS Certificate**: `python verifiers/verify_c17.py`
 - **$C_{19}$ Exact DFS Certificate**: `python verifiers/verify_c19.py`
-- **Even Cycles ($C_{16}, C_{18}, C_{20}$) & $C_{21}$ 13-Row Bounds**: `python verifiers/verify_even_cycles_and_c21.py`
+- **Extended Cycles ($C_{16}, C_{18}, C_{20}, C_{21}, C_{22}$) & LP Witnesses**: `python verifiers/verify_even_cycles_and_c21.py`
 - **$C_{20}$ Exact CP-SAT Solver**: `python solve_c20.py --mode tight`
 - **$C_{21}$ Exact CP-SAT Solver**: `python solve_c21.py`
+- **$C_{22}$ Exact CP-SAT Solver**: `python solve_c22.py`
+- **General $C_n$ CP-SAT Solver**: `python solve_cn.py --n 23 --rows 14`
 
 ---
 
@@ -54,13 +57,15 @@ To run individual verifiers:
 ├── theorem_ledger.md           # Single Source of Truth for all propositions
 ├── solve_c20.py                # C20 exact CP-SAT solver and verifier
 ├── solve_c21.py                # C21 exact CP-SAT solver and verifier
+├── solve_c22.py                # C22 exact CP-SAT solver and verifier
+├── solve_cn.py                 # General cycle Cn CP-SAT solver
 ├── manuscript/                 # Full monograph chapters
 │   ├── 01_introduction.md      # Model, Lucas numbers, D_n, and small n infeasibility
 │   ├── 02_universal_lower_bound.md # Universal potential inequality (LP >= 12)
-│   ├── 03_finite_cases.md      # C13 through C21 exact certificates & obstructions
+│   ├── 03_finite_cases.md      # C13 through C22 exact certificates & obstructions
 │   ├── 04_asymptotic_lp_limit.md # General lambda Markov chain proof (lim LP = 6*lambda)
 │   ├── 05_integer_complexity.md # General lambda N(n) = Theta(log n) and unbounded gap
-│   └── 06_open_problems.md     # Plateau [13, 21], dual code L(M), and threshold n* >= 22
+│   └── 06_open_problems.md     # Plateau [13, 22], dual code L(M), and threshold n* >= 23
 ├── verifiers/                  # Self-contained Python verifiers
 │   ├── verify_all.py           # Master runner (runs all 8 verifiers)
 │   ├── verify_general_lambda.py # General lambda Fraction verification
@@ -71,7 +76,7 @@ To run individual verifiers:
 │   ├── verify_c17.py           # C17 exact 54,310-node DFS exclusion
 │   ├── verify_c17_boundary.py  # C17 barrier analysis (witness & Gram non-PSD)
 │   ├── verify_c19.py           # C19 exact 726,693-node DFS exclusion
-│   └── verify_even_cycles_and_c21.py # C16, C18, C20, C21 suites & 2-row repair check
+│   └── verify_even_cycles_and_c21.py # C16, C18, C20, C21, C22 suites & LP=12 witnesses
 ├── data/                       # Concrete test suite constructions
 │   ├── solution_c13.txt        # 13x13 binary matrix
 │   ├── solution_c14.txt        # 13x14 binary matrix
@@ -81,7 +86,9 @@ To run individual verifiers:
 │   ├── solution_c18.txt        # 13x18 binary matrix
 │   ├── solution_c19.txt        # 13x19 binary matrix
 │   ├── solution_c20.txt        # 13x20 binary matrix
-│   └── solution_c21.txt        # 13x21 binary matrix
+│   ├── solution_c21.txt        # 13x21 binary matrix
+│   ├── solution_c22.txt        # 13x22 binary matrix
+│   └── solution_c23.txt        # 14x23 binary matrix
 └── history/                    # Superseded bounds and historical near-misses
 ```
 

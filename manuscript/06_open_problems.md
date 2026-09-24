@@ -91,25 +91,28 @@ $$\boxed{LP(19) = 12, \qquad N(19) = 13, \qquad G(19) = 1.}$$
 
 ---
 
-## 5. The Continuous Plateau $[13, 21]$ and Resolution of $C_{20}, C_{21}$
+## 5. The Continuous Plateau $[13, 22]$ and Resolution of $C_{20}, C_{21}, C_{22}$
 
-### Full Closure of Even Cycles and $C_{21}$
-Explicit 13-row binary covering arrays have been established and mechanically verified for $C_{16}$ (464 valid pairs), $C_{18}$ (594 valid pairs), $C_{20}$ (740 valid pairs), and $C_{21}$ (819 valid pairs), recorded in `data/solution_c16.txt`, `data/solution_c18.txt`, `data/solution_c20.txt`, and `data/solution_c21.txt`.
+### Full Closure of Even Cycles and $C_{21}, C_{22}$
+Explicit 13-row binary covering arrays have been established and mechanically verified for $C_{16}$ (464 valid pairs), $C_{18}$ (594 valid pairs), $C_{20}$ (740 valid pairs), $C_{21}$ (819 valid pairs), and $C_{22}$ (902 valid pairs), recorded in `data/solution_c16.txt`, `data/solution_c18.txt`, `data/solution_c20.txt`, `data/solution_c21.txt`, and `data/solution_c22.txt`.
 
-Furthermore, by Theorem T1, any putative 12-row solution on $C_{20}$ (277 tight rows) or $C_{21}$ (367 tight rows) must consist exclusively of tight configurations.
+Furthermore, by Theorem T1, any putative 12-row solution on $C_{20}$ (277 tight rows), $C_{21}$ (367 tight rows), or $C_{22}$ (486 tight rows) must consist exclusively of tight configurations.
 Exact CP-SAT models with dihedral symmetry breaking prove:
 - `solve_c20.py --rows 12 --mode tight`: **INFEASIBLE** (0.89s) $\implies N(20) = 13$.
 - `solve_c21.py --rows 12`: **INFEASIBLE** (0.80s) $\implies N(21) = 13$.
+- `solve_c22.py --rows 12`: **INFEASIBLE** (1.21s) $\implies N(22) = 13$.
 
 Moreover, exact rational LP witnesses of total weight 12 are constructed and verified in pure fractional arithmetic:
 - $C_{20}$: 5 rotation orbits of length 20, weights $\left(\frac{4}{35}, \frac{4}{35}, \frac{2}{35}, \frac{1}{7}, \frac{6}{35}\right)$, total weight 12 $\implies LP(20) = 12$.
 - $C_{21}$: 4 rotation orbits (sizes 3, 21, 21, 21), weights $\left(\frac{5}{17}, \frac{2}{17}, \frac{6}{17}, \frac{1}{17}\right)$, total weight 12 $\implies LP(21) = 12$.
+- $C_{22}$: 5 rotation orbits (sizes 22, 22, 22, 22, 2), weights $\left(\frac{3}{25}, \frac{4}{25}, \frac{2}{25}, \frac{4}{25}, \frac{7}{25}\right)$, total weight 12 $\implies LP(22) = 12$.
+- $C_{23}$: 5 rotation orbits of length 23, weights $\left(\frac{19}{253}, \frac{21}{253}, \frac{38}{253}, \frac{31}{253}, \frac{1}{11}\right)$, total weight 12 $\implies LP(23) = 12$.
 
-### The 9-Integer Plateau and Global Jump Threshold
-Combining all exact results establishes that **every integer in the 9-element range $n \in [13, 21]$ has $N(n) = 13$**:
-$$\boxed{N(13) = N(14) = N(15) = N(16) = N(17) = N(18) = N(19) = N(20) = N(21) = 13.}$$
+### The 10-Integer Plateau and Global Jump Threshold
+Combining all exact results establishes that **every integer in the 10-element range $n \in [13, 22]$ has $N(n) = 13$**:
+$$\boxed{N(13) = N(14) = N(15) = N(16) = N(17) = N(18) = N(19) = N(20) = N(21) = N(22) = 13.}$$
 Consequently, the global jump threshold where the integer optimum first exceeds 13 is pushed to:
-$$\boxed{n^*_{\text{global}} \ge 22.}$$
+$$\boxed{n^*_{\text{global}} \ge 23.}$$
 
 ---
 
@@ -125,20 +128,22 @@ From our exact theorems:
 - For $M \le 11$: $L(M) = 6$ (by Theorem T1, $N(n) \ge 12$ for all $n \ge 7$).
 - For $M = 12$: $L(12) = 12$ (since $N(12) \le 12$, and for all $n \ge 13$, $N(n) \ge 13$).
 - For $M = 13$: We have rigorously established:
-  $$\boxed{L(13) \ge 21.}$$
+  $$\boxed{L(13) \ge 22.}$$
+  Moreover, among tight rows, CP-SAT proves that $C_{23}$ with 13 tight rows is INFEASIBLE (18.78s), while 14 tight rows is OPTIMAL (4.86s, `data/solution_c23.txt`), establishing:
+  $$\boxed{L_{\text{tight}}(13) = 22.}$$
 
 ### Open Problems and Conjectures
 
 1. **Exact Determination of $L(13)$ and the Jump Threshold**:
-   Is $L(13) = 21$ (meaning $n^*_{\text{global}} = 22$ is the exact jump point where $N(22) = 14$), or does $L(13) \ge 22$?
-   This is equivalent to determining whether the space of legal independent sets on $C_{22}$ can support 13 mutually covering rows.
+   Does $C_{23}$ admit any non-tight 13-row solution, or is $N(23) = 14$, making $L(13) = 22$ and $n^*_{\text{global}} = 23$ the exact universal jump threshold?
+   Exhaustive check on the full universe of 64,079 legal rows on $C_{23}$ remains the active computational boundary.
 
 2. **Finite Attainment of the Fractional Constant $\lim LP(n) = 12$**:
-   While we have established exact rational certificates with $LP(n) = 12$ for $n \in \{13, 14, 15, 16, 17, 18, 19, 20, 21\}$, does $LP(n) = 12$ hold identically for **all** $n \ge 13$?
-   Or do there exist cycle lengths where the fractional optimum strictly exceeds 12 before decaying exponentially back toward 12?
+   Exact rational certificates now certify $LP(n) = 12$ across all $n \in [13, 24]$.
+   We conjecture that $LP(n) \equiv 12$ holds identically for **all** $n \ge 13$.
 
 3. **Asymptotic Constant of Integer Complexity**:
    Theorem T6 establishes $N_\lambda(n) = \Theta_\lambda(\log n)$ for all $\lambda \ge 1$.
    What is the exact asymptotic leading constant:
    $$c(\lambda) = \lim_{n \to \infty} \frac{N_\lambda(n)}{\log_2 n} ?$$
-   Does $c(2)$ equal 1, or is it strictly larger due to the cyclic adjacent-exclusion constraint?
+

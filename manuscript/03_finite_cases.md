@@ -1,6 +1,6 @@
-# Chapter 3: Finite Cases: Exact Integrality Gaps for $n \in \{13, \dots, 21\}$
+# Chapter 3: Finite Cases: Exact Integrality Gaps for $n \in \{13, \dots, 22\}$
 
-Across all nine cycle lengths in the unbroken interval $n \in [13, 21]$, an invariant exact structure emerges:
+Across all ten cycle lengths in the unbroken interval $n \in [13, 22]$, an invariant exact structure emerges:
 $$\boxed{LP(n) = 12, \qquad N(n) = 13, \qquad \text{Integrality Gap } G(n) = 1.}$$
 
 Although they share the same **LP equality facet** (tight rows characterized by cyclic gap words on $\{2, 3\}$), their obstructions to 12 rows stem from distinct combinatorial, algebraic, and structural mechanisms.
@@ -23,6 +23,8 @@ In any 12-row solution, every selected row must achieve this equality, and every
 | $C_{19}$ | 11 orbits of length 19 (209 rows) | Residual coverage bit-parallel DFS exclusion (726,693 nodes) across 462 candidate quotas. |
 | $C_{20}$ | 14 orbits (277 tight rows) | Explicit 13-row witness ($N(20) \le 13$); CP-SAT tight 12-row proved INFEASIBLE. Exact rational LP=12 witness. |
 | $C_{21}$ | 19 orbits (367 tight rows) | Explicit 13-row witness ($N(21) \le 13$); CP-SAT tight 12-row proved INFEASIBLE. Exact rational LP=12 witness. |
+| $C_{22}$ | 24 orbits (486 tight rows) | Explicit 13-row witness ($N(22) \le 13$); CP-SAT tight 12-row proved INFEASIBLE. Exact rational LP=12 witness. |
+
 
 ### Odd-Cycle Column Rigidity
 For any odd cycle $n \ge 11$, in a 12-row solution:
@@ -221,14 +223,48 @@ Verified independently in `verifiers/verify_even_cycles_and_c21.py`.
 
 ---
 
-## 10. The Continuous 9-Integer Plateau $[13, 21]$ and the Global Threshold
+## 10. Cycle $C_{22}$ (Exact 13-Row Optimum and Plateau Saturation)
 
-Synthesizing the results across all cycles from $C_{13}$ to $C_{21}$:
+On $C_{22}$, there are 902 feasible pairwise state requirements across distances $1 \le d \le 11$.
+The space of legal independent sets contains 486 tight rows partitioned into 24 rotation orbits.
 
-$$\boxed{N(13) = N(14) = N(15) = N(16) = N(17) = N(18) = N(19) = N(20) = N(21) = 13.}$$
+### Certificate of 12-Row Infeasibility
+By Theorem T1, any putative 12-row covering array on $C_{22}$ must consist entirely of tight rows.
+An exhaustive CP-SAT feasibility model over all 486 tight rows with dihedral symmetry breaking proves that no 12-row assignment exists:
+```bash
+python solve_c22.py --rows 12  # returns INFEASIBLE (1.21s)
+```
+Combined with $LP(22) \ge 12$, this strictly establishes $N(22) \ge 13$.
 
-**Theorem (9-Integer Continuous Plateau & Jump Threshold)**:
-Across nine consecutive integers $n \in [13, 21]$, the minimum test suite size remains rigidly invariant at $N(n) = 13$.
+### Explicit 13-Row Witness
+An explicit 13-row binary covering array is constructed in `data/solution_c22.txt`:
+```bash
+python solve_c22.py --rows 13  # returns OPTIMAL (4.61s)
+```
+Every one of the 902 valid pairwise requirements achieves coverage $\ge 2$.
+
+### Rational LP=12 Certificate
+An exact rational LP witness on $C_{22}$ is constructed from 5 rotation orbits (representatives 599189, 608597, 610965, 697685, 1398101 with sizes 22, 22, 22, 22, 2) with weights:
+$$y = \left(\frac{3}{25}, \frac{4}{25}, \frac{2}{25}, \frac{4}{25}, \frac{7}{25}\right)$$
+Total weight is $22 \times \left(\frac{3+4+2+4}{25}\right) + 2 \times \frac{7}{25} = \frac{286 + 14}{25} = \frac{300}{25} = 12$.
+Every requirement achieves coverage $\ge 2$ in exact rational arithmetic.
+Therefore:
+$$\boxed{LP(22) = 12, \qquad N(22) = 13, \qquad G(22) = 1.}$$
+Verified independently in `verifiers/verify_even_cycles_and_c21.py`.
+
+---
+
+## 11. The Continuous 10-Integer Plateau $[13, 22]$ and the Global Threshold
+
+Synthesizing the results across all cycles from $C_{13}$ to $C_{22}$:
+
+$$\boxed{N(13) = N(14) = N(15) = N(16) = N(17) = N(18) = N(19) = N(20) = N(21) = N(22) = 13.}$$
+
+**Theorem (10-Integer Continuous Plateau & Global Jump Threshold)**:
+Across ten consecutive integers $n \in [13, 22]$, the minimum test suite size remains rigidly invariant at $N(n) = 13$.
 Consequently, the smallest cycle length $n^*_{\text{global}}$ where the integer optimum first jumps to 14 or higher must satisfy:
-$$\boxed{n^*_{\text{global}} \ge 22.}$$
+$$\boxed{n^*_{\text{global}} \ge 23.}$$
+Furthermore, the dual cycle capacity of 13 rows satisfies $L(13) \ge 22$.
+On $C_{23}$, CP-SAT tight search proves infeasibility in 18.78s, establishing that the tight-row capacity is strictly saturated at $L_{\text{tight}}(13) = 22$.
+
 

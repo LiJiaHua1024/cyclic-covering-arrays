@@ -30,6 +30,11 @@ SUITES[21] = [
     299605, 338213, 599189, 600658, 608841, 676517, 693546,
     697673, 1198418, 1223316, 1354410, 1397930, 1398100,
 ]
+SUITES[22] = [
+    599205, 692821, 1198741, 1221970, 1354021, 1354057, 1397418,
+    1398089, 2397332, 2435666, 2705748, 2774314, 2796202,
+]
+
 
 
 def bit(mask, i, n):
@@ -195,13 +200,18 @@ def main():
     assert not f21 and c21 == 819
     print("PASS: C21 verified (13 rows; 819 requirements covered >= 2).")
 
+    # Verify C22 (13 rows, 902 requirements)
+    f22, c22 = inspect(22, SUITES[22])
+    assert not f22 and c22 == 902
+    print("PASS: C22 verified (13 rows; 902 requirements covered >= 2).")
+
     # Verify C21 repair obstruction
     verify_c21_repair_obstruction()
 
-    # Verify exact rational LP=12 witnesses for C20 and C21
+    # Verify exact rational LP=12 witnesses for C20, C21, C22, C23
     verify_fractional_lp_certificates()
 
-    print(f"All even-cycle and C21 checks passed in {perf_counter() - t0:.2f}s.")
+    print(f"All extended cycle and plateau checks passed in {perf_counter() - t0:.2f}s.")
 
 
 def verify_fractional_lp_certificates():
@@ -252,6 +262,53 @@ def verify_fractional_lp_certificates():
                 cov = sum(w for r, w in w21.items() if ((r >> i) & 1) == a and ((r >> j) & 1) == b)
                 assert cov >= 2
     print("PASS: C21 exact rational LP=12 witness verified (4 orbits, total weight 12).")
+
+    # C22 LP=12 rational certificate
+    N22 = 22
+    full22 = (1 << N22) - 1
+    reps22 = [599189, 608597, 610965, 697685, 1398101]
+    weights22 = [Fraction(3, 25), Fraction(4, 25), Fraction(2, 25), Fraction(4, 25), Fraction(7, 25)]
+    w22 = {}
+    tot22 = Fraction(0)
+    for rep, w in zip(reps22, weights22):
+        orb = {((rep << k) | (rep >> (N22 - k))) & full22 for k in range(N22)}
+        for r in orb:
+            w22[r] = w22.get(r, Fraction(0)) + w
+            tot22 += w
+    assert tot22 == 12
+
+    for d in range(1, N22 // 2 + 1):
+        for i in range(N22):
+            j = (i + d) % N22
+            patterns = ((0, 0), (0, 1), (1, 0)) if d == 1 else ((0, 0), (0, 1), (1, 0), (1, 1))
+            for a, b in patterns:
+                cov = sum(w for r, w in w22.items() if ((r >> i) & 1) == a and ((r >> j) & 1) == b)
+                assert cov >= 2
+    print("PASS: C22 exact rational LP=12 witness verified (5 orbits, total weight 12).")
+
+    # C23 LP=12 rational certificate
+    N23 = 23
+    full23 = (1 << N23) - 1
+    reps23 = [1198421, 1200725, 1201301, 1354325, 1398101]
+    weights23 = [Fraction(19, 253), Fraction(21, 253), Fraction(38, 253), Fraction(31, 253), Fraction(1, 11)]
+    w23 = {}
+    tot23 = Fraction(0)
+    for rep, w in zip(reps23, weights23):
+        orb = {((rep << k) | (rep >> (N23 - k))) & full23 for k in range(N23)}
+        for r in orb:
+            w23[r] = w23.get(r, Fraction(0)) + w
+            tot23 += w
+    assert tot23 == 12
+
+    for d in range(1, N23 // 2 + 1):
+        for i in range(N23):
+            j = (i + d) % N23
+            patterns = ((0, 0), (0, 1), (1, 0)) if d == 1 else ((0, 0), (0, 1), (1, 0), (1, 1))
+            for a, b in patterns:
+                cov = sum(w for r, w in w23.items() if ((r >> i) & 1) == a and ((r >> j) & 1) == b)
+                assert cov >= 2
+    print("PASS: C23 exact rational LP=12 witness verified (5 orbits, total weight 12).")
+
 
 
 if __name__ == "__main__":
