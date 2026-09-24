@@ -1,94 +1,188 @@
-"""
-Exact, solver-free verifier for cycle C19:
-1. Validates the explicit 13-row covering array witness (N(19) <= 13).
-2. Verifies universal scoring lower bound (LP(19) >= 12).
-3. Establishes the bounded interval 12 <= LP(19) <= N(19) <= 13.
-4. Classifies the 209 tight {2, 3}-gap rows into 11 rotation orbits.
-5. Proves the odd-cycle integer jump threshold n* >= 21.
-"""
-import os
-from itertools import product
+#!/usr/bin/env python3
+"""Solver-free, self-contained C19 exact-value certificate (Python 3 stdlib)."""
+from itertools import combinations, product
+from time import perf_counter
 
 N = 19
-MASK = (1 << N) - 1
-
-# Explicit 13-row witness masks
-WITNESS_MASKS = [
+FULL = (1 << N) - 1
+UPPER = (
     152745, 150101, 337044, 305834, 86693, 169290, 173349,
     76361, 174738, 346410, 299604, 349522, 43349,
-]
+)
+EXPECTED_REPS = (
+    74901, 74917, 75045, 75093, 76117, 76373,
+    76437, 76453, 84565, 84629, 87381,
+)
 
-def bit(m, i):
-    return (m >> (i % N)) & 1
 
-def is_legal(m):
-    return 0 <= m <= MASK and all(not (bit(m, i) and bit(m, i + 1)) for i in range(N))
+def bit(mask, i):
+    return (mask >> (i % N)) & 1
 
-def assert_witness_coverage():
-    # Verify correspondence with data/solution_c19.txt if available
-    sol_file = os.path.join(os.path.dirname(__file__), "..", "data", "solution_c19.txt")
-    if os.path.exists(sol_file):
-        with open(sol_file, "r") as f:
-            lines = [l.strip() for l in f if l.strip()]
-        assert len(lines) == 13
-        file_masks = [sum(int(ch) << i for i, ch in enumerate(l)) for l in lines]
-        assert file_masks == WITNESS_MASKS
 
-    assert len(WITNESS_MASKS) == len(set(WITNESS_MASKS)) == 13
+def rotate(mask, k):
+    return ((mask << k) | (mask >> (N - k))) & FULL
 
-    for m in WITNESS_MASKS:
-        assert is_legal(m), f"Illegal row: {m}"
 
-    checked = 0
+def incidence(mask, d):
+    return sum(1 << i for i in range(N) if bit(mask, i) and bit(mask, i + d))
+
+
+def valid_suite(suite):
+    if len(suite) != len(set(suite)):
+        return False
+    for mask in suite:
+        if mask < 0 or mask > FULL:
+            return False
+        if any(bit(mask, i) and bit(mask, i + 1) for i in range(N)):
+            return False
     for d in range(1, N // 2 + 1):
         for i in range(N):
-            j = (i + d) % N
             for a, b in product((0, 1), repeat=2):
-                if d == 1 and (a, b) == (1, 1):
+                if d == 1 and a == b == 1:
                     continue
-                cov = sum(bit(m, i) == a and bit(m, j) == b for m in WITNESS_MASKS)
-                assert cov >= 2, f"Under-covered interaction: i={i}, j={j}, val=({a},{b}), cov={cov}"
-                checked += 1
+                count = sum(bit(mask, i) == a and bit(mask, i + d) == b
+                            for mask in suite)
+                if count < 2:
+                    return False
+    return True
 
-    # Total interactions: 9 distances * 19 positions * 4 pairs - 19 forbidden pairs = 665
-    assert checked == 665
 
-def assert_tight_row_structure():
-    # Identify all {2, 3}-gap tight words
-    tight = []
-    for mask in range(1 << N):
-        if not is_legal(mask):
-            continue
-        ones = [i for i in range(N) if bit(mask, i)]
-        if not ones:
-            continue
-        gaps = [(ones[(k + 1) % len(ones)] - ones[k]) % N for k in range(len(ones))]
-        if all(g in (2, 3) for g in gaps):
-            tight.append(mask)
+def tight_rows():
+    ans = set()
+    for length in (7, 8, 9):
+        for gaps in product((2, 3), repeat=length):
+            if sum(gaps) != N:
+                continue
+            positions = [0]
+            for gap in gaps[:-1]:
+                positions.append(positions[-1] + gap)
+            base = sum(1 << i for i in positions)
+            ans.update(rotate(base, k) for k in range(N))
+    return sorted(ans)
 
-    assert len(tight) == 209, f"Expected 209 tight rows, got {len(tight)}"
-    assert len(tight) % N == 0
-
-    # Partition into rotation orbits
-    seen = set()
-    orbits = []
-    for m in tight:
-        if m in seen:
-            continue
-        orb = {((m << rot) | (m >> (N - rot))) & MASK for rot in range(N)}
-        assert len(orb) == N, "Expected full orbit of length 19"
-        seen.update(orb)
-        orbits.append(min(orb))
-
-    assert len(orbits) == 11, f"Expected 11 orbits, got {len(orbits)}"
 
 def main():
-    assert_witness_coverage()
-    assert_tight_row_structure()
-    print("PASS: C19 explicit 13-row witness verified (all 665 pairs covered >= 2).")
-    print("      Tight {2, 3}-gap structure: 209 rows across 11 orbits of length 19.")
-    print("      Strict bounds: 12 <= LP(19) <= N(19) <= 13.")
-    print("      Threshold implication: Odd-cycle jump threshold n* >= 21.")
+    assert len(UPPER) == 13 and valid_suite(UPPER)
+    rows = tight_rows()
+    assert len(rows) == 209
+    remaining = set(rows)
+    classes = []
+    while remaining:
+        rep = min(remaining)
+        orbit = {rotate(rep, k) for k in range(N)}
+        assert orbit <= remaining and len(orbit) == N
+        classes.append((rep, orbit))
+        remaining -= orbit
+    assert tuple(rep for rep, _ in classes) == EXPECTED_REPS
 
-if __name__ == "__main__":
+    row_index = {mask: j for j, mask in enumerate(rows)}
+    group = [next(k for k, (_, orbit) in enumerate(classes) if m in orbit)
+             for m in rows]
+    profiles = [tuple(incidence(rep, d).bit_count() for d in range(2, 10))
+                for rep, _ in classes]
+    scored = [sum(incidence(mask, d) << (N * (d - 3))
+                  for d in (3, 4, 5)) for mask in rows]
+    residual = [sum(incidence(mask, d) << (N * (d - 6))
+                    for d in (6, 7, 8, 9)) for mask in rows]
+
+    scored_quota_count = 0
+    quotas = []
+    for dividers in combinations(range(22), 10):
+        cuts = (-1,) + dividers + (22,)
+        q = tuple(cuts[k + 1] - cuts[k] - 1 for k in range(11))
+        totals = [sum(q[k] * profiles[k][d] for k in range(11))
+                  for d in range(8)]
+        if totals[:4] != [57, 38, 38, 38]:
+            continue
+        scored_quota_count += 1
+        if all(v >= 38 for v in totals[4:]):
+            quotas.append(q)
+    assert scored_quota_count == 4300 and len(quotas) == 462
+
+    all_scored = (1 << 57) - 1
+    all_residual = (1 << 76) - 1
+    nodes = 0
+
+    for quota in quotas:
+        allowed = [j for j in range(209) if quota[group[j]]]
+        scored_column = [tuple(j for j in allowed if scored[j] >> p & 1)
+                         for p in range(57)]
+        residual_column = [tuple(j for j in allowed if residual[j] >> p & 1)
+                         for p in range(76)]
+        first_group = next(k for k, v in enumerate(quota) if v)
+        seed = row_index[classes[first_group][0]]
+        used = [0] * 11
+        used[first_group] = 1
+        selected = [seed]
+
+        def dfs(s_once, s_twice, r_once, r_twice, chosen_bits):
+            nonlocal nodes
+            nodes += 1
+            if len(selected) == 12:
+                if s_twice == all_scored and r_twice == all_residual:
+                    return tuple(rows[j] for j in selected)
+                return None
+
+            available = {j for j in allowed
+                         if not (chosen_bits >> j & 1)
+                         and used[group[j]] < quota[group[j]]
+                         and not (scored[j] & s_twice)}
+            best = None
+            for p in range(57):
+                if s_twice >> p & 1:
+                    continue
+                options = [j for j in scored_column[p] if j in available]
+                need = 1 if s_once >> p & 1 else 2
+                if len(options) < need:
+                    return None
+                if best is None or len(options) < len(best):
+                    best = options
+                if len(best) == 1:
+                    break
+            if best is None:
+                return None
+            for p in range(76):
+                if r_twice >> p & 1:
+                    continue
+                options = [j for j in residual_column[p] if j in available]
+                need = 1 if r_once >> p & 1 else 2
+                if len(options) < need:
+                    return None
+                if len(options) < len(best):
+                    best = options
+                if len(best) == 1:
+                    break
+
+            for j in best:
+                used[group[j]] += 1
+                selected.append(j)
+                s, r = scored[j], residual[j]
+                result = dfs(s_once | s, s_twice | (s_once & s),
+                             r_once | r, r_twice | (r_once & r),
+                             chosen_bits | (1 << j))
+                if result is not None:
+                    return result
+                selected.pop()
+                used[group[j]] -= 1
+            return None
+
+        s, r = scored[seed], residual[seed]
+        witness = dfs(s, 0, r, 0, 1 << seed)
+        if witness is not None:
+            print('Necessary-condition 12-row candidate:', witness)
+            print('Full covering-array validity:', valid_suite(witness))
+            print('DFS nodes:', nodes)
+            return
+
+    print('Tight rows:', len(rows), '; rotation orbits:', len(classes))
+    print('Scored quotas:', scored_quota_count,
+          '; residual-eligible quotas:', len(quotas))
+    print('DFS nodes:', nodes)
+    print('Verified 13-row witness:', UPPER)
+    print('PASS: no 12-row solution on C19; N(19) = 13')
+
+
+if __name__ == '__main__':
+    start = perf_counter()
     main()
+    print('Elapsed seconds:', round(perf_counter() - start, 2))

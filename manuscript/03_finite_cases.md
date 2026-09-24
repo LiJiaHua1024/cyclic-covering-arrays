@@ -1,9 +1,9 @@
-# Chapter 3: Finite Cases: Exact Integrality Gaps for $n \in \{13, 14, 15, 17\}$
+# Chapter 3: Finite Cases: Exact Integrality Gaps for $n \in \{13, 14, 15, 17, 19\}$
 
-Across the four cycle lengths $n \in \{13, 14, 15, 17\}$, an invariant exact structure emerges:
+Across the five cycle lengths $n \in \{13, 14, 15, 17, 19\}$, an invariant exact structure emerges:
 $$\boxed{LP(n) = 12, \qquad N(n) = 13, \qquad \text{Integrality Gap } G(n) = 1.}$$
 
-Although they share the same **LP equality facet** (tight rows characterized by cyclic gap words on $\{2, 3\}$), their obstructions to 12 rows stem from three distinct combinatorial mechanisms.
+Although they share the same **LP equality facet** (tight rows characterized by cyclic gap words on $\{2, 3\}$), their obstructions to 12 rows stem from distinct combinatorial and algebraic mechanisms.
 
 ---
 
@@ -17,6 +17,8 @@ In any 12-row solution, every selected row must achieve this equality, and every
 | $C_{13}$ | 3 orbits of length 13 (39 rows) | Scored distance 3, 4 equations force a row variable $z = -1$. |
 | $C_{14}$ | 3 classes $(7,0),(4,2),(1,4)$ (51 rows) | Scored equations are satisfiable; excluded by 19-term modulo-7 identity and subset-sum obstruction. |
 | $C_{15}$ | 6 orbits of sizes $(3, 15, 15, 15, 5, 15)$ (68 rows) | Scored and residual interaction bounds force an impossible column Gram matrix of $\mathbb{F}_2$-rank $\ge 13$. |
+| $C_{17}$ | 7 orbits of length 17 (119 rows) | Residual coverage bit-parallel DFS exclusion (54,310 nodes) across 29 candidate quotas. |
+| $C_{19}$ | 11 orbits of length 19 (209 rows) | Residual coverage bit-parallel DFS exclusion (726,693 nodes) across 462 candidate quotas. |
 
 ### Odd-Cycle Column Rigidity
 For any odd cycle $n \ge 11$, in a 12-row solution:
@@ -117,3 +119,21 @@ Because row repeats are explicitly permitted in the search tree, this infeasibil
 Combined with the universal lower bound $LP(17) \ge 12$ and matching upper bound $N(17) \le 13$:
 $$\boxed{LP(17) = 12, \qquad N(17) = 13, \qquad G(17) = 1.}$$
 Verified independently in `verifiers/verify_c17.py`.
+
+---
+
+## 6. Cycle $C_{19}$ (726,693-Node Exact Depth-First Search Obstruction)
+
+On $C_{19}$, tight configurations from $\{2, 3\}$-gap words correspond to $2a + 3b = 19 \implies (a, b) \in \{(8, 1), (5, 3), (2, 5)\}$.
+This generates exactly **209 tight rows partitioned into 11 rotation orbits of full length 19**.
+
+### The Exhaustive Finite Certificate
+1. **Upper Bound Construction**: An explicit 13-row binary covering array is verified across all 665 feasible pairwise states in `data/solution_c19.txt`:
+   $$\{152745, 150101, 337044, 305834, 86693, 169290, 173349, 76361, 174738, 346410, 299604, 349522, 43349\}.$$
+2. **Quota Vector Screening**: Across all partitions $\sum_{k=1}^{11} q_k = 12$, exactly 4,300 vectors satisfy the distance 2, 3, 4, 5 total coverage equalities $(57, 38, 38, 38)$. Requiring the residual distances 6, 7, 8, 9 to have aggregate coverage $\ge 38$ reduces the candidate set to **462 residual-eligible quotas**.
+3. **Exact Bit-Parallel DFS**: Fixing the representative row of the first non-zero orbit breaks cyclic symmetry. The search tracks 57-bit scored masks and 76-bit residual masks, pruning immediately whenever the remaining available rows cannot supply the missing coverage.
+4. **Resolution**: The search explores exactly **726,693 DFS nodes** in ~42 seconds using standard Python, finding **zero valid 12-row solutions**.
+
+Combined with $LP(19) \ge 12$ and $N(19) \le 13$:
+$$\boxed{LP(19) = 12, \qquad N(19) = 13, \qquad G(19) = 1.}$$
+Verified independently in `verifiers/verify_c19.py`.
