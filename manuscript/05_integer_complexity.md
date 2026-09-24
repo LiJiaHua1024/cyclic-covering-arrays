@@ -73,3 +73,14 @@ G(n) &= N(n) - LP(n) = \Theta(\log n) \longrightarrow \infty
 \end{aligned}$$
 
 The integrality gap does not vanish or remain constant in the large-scale limit; rather, it grows logarithmically with dimension $n$.
+
+---
+
+## 5. Context and Connection to Classical Literature
+
+The logarithmic scaling of discrete covering arrays is rooted in the classical extremal set theory of Rényi (1971), Katona (1973), and Kleitman & Spencer (1973). For unconstrained binary covering arrays of strength 2, it is well known that $N \sim \frac{1}{2} \log_2 n$.
+
+In the presence of cyclic exclusion constraints, our result proves that:
+1. The logarithmic integer scaling $N(n) = \Theta(\log n)$ continues to hold despite the exclusion of adjacent ones.
+2. Crucially, while the integer testing suite must grow logarithmically, the fractional relaxation remains **strictly bounded** and exponentially rapidly stabilizes at $\lim_{n \to \infty} LP(n) = 12$.
+3. Consequently, the unit gap $G(n) = 1$ observed on small finite cycles ($C_{13}, C_{14}, C_{15}$) is a localized finite phenomenon: as $n \to \infty$, the true integrality gap diverges to infinity.
