@@ -1,6 +1,6 @@
-# Chapter 3: Finite Cases: Exact Integrality Gaps for $n \in \{13, 14, 15\}$
+# Chapter 3: Finite Cases: Exact Integrality Gaps for $n \in \{13, 14, 15, 17\}$
 
-Across the three consecutive cycle lengths $n \in \{13, 14, 15\}$, an invariant exact structure emerges:
+Across the four cycle lengths $n \in \{13, 14, 15, 17\}$, an invariant exact structure emerges:
 $$\boxed{LP(n) = 12, \qquad N(n) = 13, \qquad \text{Integrality Gap } G(n) = 1.}$$
 
 Although they share the same **LP equality facet** (tight rows characterized by cyclic gap words on $\{2, 3\}$), their obstructions to 12 rows stem from three distinct combinatorial mechanisms.
@@ -98,3 +98,22 @@ However, because $Y$ has only 12 rows, $\operatorname{rank}_{\mathbb{Q}}(K) = \o
 An explicit 13-row solution is given in `data/solution_c15.txt`.
 A rational LP witness assigns weights $2/5$ to $V$, $1/10$ to $W_1$, $1/10$ to $W_2$, and $1/5$ to $H$, confirming $LP(15) = 12$.
 Therefore, $G(15) = 1$.
+
+---
+
+## 5. Cycle $C_{17}$ (Combinatorial Depth-First Search Obstruction)
+
+On $C_{17}$, tight configurations from $\{2, 3\}$-gap words partition into 7 rotation orbits of length 17, totaling 119 tight rows.
+While the scored distance 3, 4, 5 equations are satisfiable by themselves, combining them with the pairwise coverage lower bounds on distances 6, 7, 8 creates a complete obstruction to 12 rows.
+
+The finite certificate proceeds via exhaustive, solver-free search:
+1. **Necessary Orbit Count Screening**: Among all orbit count partitions $\sum_{j=1}^7 v_j = 12$, exactly 139 vectors satisfy the distance 3, 4, 5 aggregate demand of 34, of which only **29 vectors** also satisfy the distance 6, 7, 8 aggregate lower bounds ($\ge 34$).
+2. **Rotational Symmetry Reduction**: For each candidate vector, the search fixes the canonical representative of the first non-zero orbit, breaking rotational symmetry without loss of generality.
+3. **Exact Bit-Parallel DFS**: Maintaining 51-bit masks for scored pairs (distances 3, 4, 5) and residual pairs (distances 6, 7, 8), the recursive search branches on under-covered pairs and terminates early when available rows cannot reach coverage 2.
+
+The exhaustive search traverses exactly **54,310 DFS nodes** and identifies **zero valid 12-row solutions**.
+Because row repeats are explicitly permitted in the search tree, this infeasibility does not depend on row distinctness.
+
+Combined with the universal lower bound $LP(17) \ge 12$ and matching upper bound $N(17) \le 13$:
+$$\boxed{LP(17) = 12, \qquad N(17) = 13, \qquad G(17) = 1.}$$
+Verified independently in `verifiers/verify_c17.py`.

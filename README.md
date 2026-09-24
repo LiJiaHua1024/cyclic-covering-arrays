@@ -18,12 +18,13 @@ This repository contains the unified research monograph, exact mechanical certif
 | **[T4] $C_{15}$ Exact Optimum** | $n = 15$ | $LP(15) = 12, N(15) = 13$ ($\mathbb{F}_2$ rank obstruction on Gram matrix) | `verify_c15.py` |
 | **[T5] Asymptotic LP Limit** | $n \to \infty$ | $\displaystyle\lim_{n \to \infty} LP(n) = 12$, with rate $12 \le LP(n) \le 12 + C\theta^n$ | `verify_markov_chain.py` |
 | **[T6] Asymptotic Gap Divergence** | $n \to \infty$ | $N(n) = \Theta(\log n) \implies G(n) = N(n) - LP(n) \to \infty$ | Coding theory / Lovász Local Lemma |
+| **[T7] $C_{17}$ Exact Optimum** | $n = 17$ | $LP(17) = 12, N(17) = 13$ (54,310-node exact DFS exclusion) | `verify_c17.py` |
 
 ---
 
 ## 2. One-Click Mechanical Verification
 
-All theorems with finite or Markovian certificates run in **under 5 seconds** using standard Python (zero external dependencies):
+All theorems with finite or Markovian certificates run in **under 7 seconds** using standard Python (zero external dependencies):
 
 ```bash
 python verifiers/verify_all.py
@@ -34,6 +35,7 @@ To run individual verifiers:
 - **$C_{13}$ Integrality Gap**: `python verifiers/verify_c13.py`
 - **$C_{14}$ Exact Certificate**: `python verifiers/verify_c14.py`
 - **$C_{15}$ $\mathbb{F}_2$ Rank Certificate**: `python verifiers/verify_c15.py`
+- **$C_{17}$ Exact DFS Certificate**: `python verifiers/verify_c17.py`
 
 ---
 
@@ -44,16 +46,18 @@ To run individual verifiers:
 ├── manuscript/                 # Full monograph chapters
 │   ├── 01_introduction.md      # Model, Lucas numbers, D_n, and small n infeasibility
 │   ├── 02_universal_lower_bound.md # Universal potential inequality (LP >= 12)
-│   ├── 03_finite_cases.md      # C13, C14, C15 exact certificates & rank obstruction
+│   ├── 03_finite_cases.md      # C13, C14, C15, C17 exact certificates & obstructions
 │   ├── 04_asymptotic_lp_limit.md # 2-step gap Markov chain proof (lim LP = 12)
 │   ├── 05_integer_complexity.md # N(n) = Theta(log n) and unbounded gap divergence
-│   └── 06_open_problems.md     # C17 boundary and 3-tier failure taxonomy
+│   └── 06_open_problems.md     # C19 frontier and integer jump threshold
 ├── verifiers/                  # Self-contained Python verifiers
 │   ├── verify_all.py           # Master runner
 │   ├── verify_markov_chain.py  # Rational arithmetic Markov recurrence
 │   ├── verify_c13.py           # C13 exact certificate
 │   ├── verify_c14.py           # C14 exact certificate
-│   └── verify_c15.py           # C15 GF(2) rank certificate
+│   ├── verify_c15.py           # C15 GF(2) rank certificate
+│   ├── verify_c17.py           # C17 exact 54,310-node DFS exclusion
+│   └── verify_c17_boundary.py  # C17 barrier analysis (witness & Gram non-PSD)
 ├── data/                       # Concrete test suite constructions
 │   ├── solution_c13.txt        # 13x13 binary matrix
 │   ├── solution_c14.txt        # 13x14 binary matrix

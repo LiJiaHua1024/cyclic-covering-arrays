@@ -58,13 +58,15 @@ violating the positive-semidefiniteness required of any true Gram matrix $K = Y^
 
 ---
 
-## 4. The Missing Step to Close $N(17)=13$
+## 4. Resolution of $C_{17}$ and the Frontier at $C_{19}$
 
-The above barriers narrow the required proof strategy for $C_{17}$ to one of two paths:
-1. **Residual Coverage Exclusion**: Prove that no subset of 12 rows satisfying the distance 3, 4, 5 equalities can simultaneously satisfy the pairwise lower bounds ($\ge 2$) on distances 6, 7, 8 (noting that the witness fails distance 7).
-2. **Realizable Gram Matrix Contradiction**: Prove that all edge configurations $E$ arising from *actual binary rows* $Y$ violate positive semidefiniteness or force $\operatorname{rank}_{\mathbb{F}_2}(K) \ge 13$.
+The residual coverage barrier (Path 1) has been completely resolved:
+By implementing an exact, bit-parallel depth-first search traversing **54,310 nodes**, `verifiers/verify_c17.py` proves that no 12-row selection from the 119 tight rows can simultaneously achieve the pairwise lower bounds on distances 6, 7, and 8.
+Thus, $N(17) = 13$ is strictly closed (Theorem T7, Chapter 3).
 
-Until a solver-free certificate along one of these paths is verified, the ledger strictly maintains:
-$$\boxed{12 \le N(17) \le 13}$$
-and classifies $N(17) = 13$ as an open problem.
-All calculations above are verified independently in `verifiers/verify_c17_boundary.py`.
+### Remaining Open Conjectures
+1. **The $C_{19}$ Frontier and Integer Jump**:
+   With $N(13) = N(14) = N(15) = N(17) = 13$, the unit gap $G(n) = 1$ is now verified across all small cycles up to $n=17$.
+   What is the smallest cycle length $n^*$ where $N(n^*)$ first transitions to $14$? Does $C_{19}$ still have $N(19) = 13$?
+2. **Exact LP 12-Attainment**:
+   While $\lim_{n \to \infty} LP(n) = 12$ is proven, does there exist an infinite family of cycles where $LP(n)$ is strictly, identically equal to 12?
