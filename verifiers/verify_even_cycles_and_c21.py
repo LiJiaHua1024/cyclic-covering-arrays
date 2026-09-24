@@ -198,7 +198,60 @@ def main():
     # Verify C21 repair obstruction
     verify_c21_repair_obstruction()
 
+    # Verify exact rational LP=12 witnesses for C20 and C21
+    verify_fractional_lp_certificates()
+
     print(f"All even-cycle and C21 checks passed in {perf_counter() - t0:.2f}s.")
+
+
+def verify_fractional_lp_certificates():
+    from fractions import Fraction
+    # C20 LP=12 rational certificate
+    N20 = 20
+    full20 = (1 << N20) - 1
+    reps20 = [149797, 150165, 152741, 152917, 173397]
+    weights20 = [Fraction(4, 35), Fraction(4, 35), Fraction(2, 35), Fraction(1, 7), Fraction(6, 35)]
+    w20 = {}
+    tot20 = Fraction(0)
+    for rep, w in zip(reps20, weights20):
+        orb = {((rep << k) | (rep >> (N20 - k))) & full20 for k in range(N20)}
+        assert len(orb) == 20
+        for r in orb:
+            w20[r] = w20.get(r, Fraction(0)) + w
+            tot20 += w
+    assert tot20 == 12
+
+    for d in range(1, N20 // 2 + 1):
+        for i in range(N20):
+            j = (i + d) % N20
+            patterns = ((0, 0), (0, 1), (1, 0)) if d == 1 else ((0, 0), (0, 1), (1, 0), (1, 1))
+            for a, b in patterns:
+                cov = sum(w for r, w in w20.items() if ((r >> i) & 1) == a and ((r >> j) & 1) == b)
+                assert cov >= 2
+    print("PASS: C20 exact rational LP=12 witness verified (5 orbits, total weight 12).")
+
+    # C21 LP=12 rational certificate
+    N21 = 21
+    full21 = (1 << N21) - 1
+    reps21 = [299593, 300325, 305813, 349525]
+    weights21 = [Fraction(5, 17), Fraction(2, 17), Fraction(6, 17), Fraction(1, 17)]
+    w21 = {}
+    tot21 = Fraction(0)
+    for rep, w in zip(reps21, weights21):
+        orb = {((rep << k) | (rep >> (N21 - k))) & full21 for k in range(N21)}
+        for r in orb:
+            w21[r] = w21.get(r, Fraction(0)) + w
+            tot21 += w
+    assert tot21 == 12
+
+    for d in range(1, N21 // 2 + 1):
+        for i in range(N21):
+            j = (i + d) % N21
+            patterns = ((0, 0), (0, 1), (1, 0)) if d == 1 else ((0, 0), (0, 1), (1, 0), (1, 1))
+            for a, b in patterns:
+                cov = sum(w for r, w in w21.items() if ((r >> i) & 1) == a and ((r >> j) & 1) == b)
+                assert cov >= 2
+    print("PASS: C21 exact rational LP=12 witness verified (4 orbits, total weight 12).")
 
 
 if __name__ == "__main__":
