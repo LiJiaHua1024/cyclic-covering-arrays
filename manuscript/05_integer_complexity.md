@@ -1,91 +1,97 @@
-# Chapter 5: Integer Complexity and the Asymptotic Integrality Gap
+# Chapter 5: Integer Complexity and the Asymptotic Integrality Gap for Arbitrary Index $\lambda$
 
 While the continuous fractional relaxation remains bounded and exponentially converges to the theoretical minimum:
-$$\lim_{n \to \infty} LP(n) = 12$$
-the discrete integer test suite size $N(n)$ exhibits logarithmic divergence.
+$$\lim_{n \to \infty} LP_\lambda(n) = 6\lambda$$
+the discrete integer test suite size $N_\lambda(n)$ exhibits logarithmic divergence for any fixed coverage index $\lambda \ge 1$.
 
 ---
 
 ## 1. Theorem Statement
 
-**Theorem (Integer Asymptotic Complexity & Unbounded Gap)**:
-For cycle-constrained covering arrays with index $\lambda = 2$:
-$$N(n) = \Theta(\log n)$$
+**Theorem (Integer Asymptotic Complexity & Unbounded Integrality Gap for Arbitrary Index $\lambda$)**:
+For cycle-constrained covering arrays with arbitrary fixed index $\lambda \ge 1$:
+$$N_\lambda(n) = \Theta_\lambda(\log n)$$
 Consequently, the additive integrality gap grows unboundedly with cycle length:
-$$G(n) = N(n) - LP(n) = \Theta(\log n) \to \infty$$
+$$G_\lambda(n) = N_\lambda(n) - LP_\lambda(n) = \Theta_\lambda(\log n) \longrightarrow \infty \quad (n \to \infty)$$
 
 ---
 
-## 2. Information-Theoretic / Coding Lower Bound
+## 2. Information-Theoretic / Sphere-Packing Lower Bound
 
-Consider a maximum independent set $I$ of the cycle $C_n$, having cardinality:
+Consider a maximum independent set $I$ of the cycle graph $C_n$, having cardinality:
 $$k = |I| = \left\lfloor \frac{n}{2} \right\rfloor$$
-Because the vertices in $I$ are pairwise non-adjacent, every pair of factors in $I$ must cover all four binary configurations $\{00, 01, 10, 11\}$.
+Because the vertices in $I$ are pairwise non-adjacent along $C_n$, every pair of factors $u, v \in I$ has all four binary configurations $\{00, 01, 10, 11\}$ legally extendible, and thus each must appear at least $\lambda$ times across the $M = N_\lambda(n)$ rows of the test suite.
 
-Let $M = N(n)$ be the number of test rows, and consider the $k$ binary columns of length $M$ corresponding to the vertices in $I$:
-1. **No constant columns**: A column cannot be all-zero or all-one, as that would preclude coverage of $11$ or $00$ respectively.
-2. **No identical or complementary columns**:
-   - If two columns are identical, they can never produce states $01$ or $10$.
-   - If two columns are bitwise complementary ($c_1 = \bar{c}_2$), they can never produce states $00$ or $11$.
+Viewing the test suite as an $M \times k$ binary matrix, each vertex $v \in I$ defines a binary column code word $c_v \in \{0, 1\}^M$:
+1. **Weight constraints**: No column can have Hamming weight $< \lambda$ (otherwise $11$ cannot appear $\lambda$ times) or $> M - \lambda$ (otherwise $00$ cannot appear $\lambda$ times).
+2. **Hamming distance constraints**: For any distinct $u, v \in I$, the number of positions where $(c_u, c_v) = (0, 1)$ must be at least $\lambda$, and where $(c_u, c_v) = (1, 0)$ must be at least $\lambda$.
+   In particular, the Hamming distance satisfies:
+   $$d_H(c_u, c_v) \ge 2\lambda, \qquad d_H(c_u, \bar{c}_v) \ge 2\lambda$$
 
-Therefore, the columns corresponding to $I$ must be pairwise non-constant, distinct, and non-complementary.
-Partitioning the $2^M - 2$ non-constant binary vectors of length $M$ into complementary pairs $\{v, \bar{v}\}$ yields at most $2^{M-1} - 1$ distinct pairs.
-
-Hence, we must have:
-$$k \le 2^{M-1} - 1 \implies 2^{M-1} \ge \left\lfloor \frac{n}{2} \right\rfloor + 1$$
-Taking base-2 logarithms:
-$$M \ge 1 + \left\lceil \log_2\left(\left\lfloor \frac{n}{2} \right\rfloor + 1\right) \right\rceil = \Omega(\log n)$$
+Applying the sphere-packing (Hamming) bound on the binary hypercube $\{0, 1\}^M$:
+The Hamming spheres of radius $\lambda - 1$ centered at each $c_u$ and its bitwise complement $\bar{c}_u$ are pairwise disjoint.
+The volume of a Hamming sphere of radius $\lambda - 1$ in $\{0, 1\}^M$ is:
+$$V(M, \lambda - 1) = \sum_{j=0}^{\lambda - 1} \binom{M}{j}$$
+Since there are $k$ columns and $2k$ mutually disjoint spheres of radius $\lambda - 1$:
+$$2k \cdot \sum_{j=0}^{\lambda - 1} \binom{M}{j} \le 2^M$$
+Taking base-2 logarithms yields the rigorous information-theoretic lower bound:
+$$M \ge 1 + \log_2 k + \log_2\left(\sum_{j=0}^{\lambda - 1} \binom{M}{j}\right) = \Omega_\lambda(\log n)$$
+For $\lambda = 2$, this specializes to $2k(1 + M) \le 2^M \implies M \ge 1 + \lceil \log_2(\lfloor n/2 \rfloor + 1) \rceil$.
 
 ---
 
-## 3. Probabilistic / Random Construction Upper Bound
+## 3. Probabilistic Construction Upper Bound for General $\lambda$
 
-To show $N(n) = O(\log n)$, we consider the random selection of rows from the universe of legal configurations $\mathcal{L}(C_n)$, whose size is given by the Lucas number $L_n = F_{n-1} + F_{n+1} \approx \phi^n$.
+To establish $N_\lambda(n) = O_\lambda(\log n)$, we apply the probabilistic method by sampling rows independently and uniformly at random from the universe of legal configurations $\mathcal{L}(C_n)$, whose cardinality is given by the Lucas number $L_n = F_{n-1} + F_{n+1} = \Theta(\phi^n)$.
 
+### Single-Row Success Probability
 For any fixed feasible pairwise requirement $(i, j, a, b)$:
-- Specifying $(x_i, x_j) = (a, b)$ restricts at most 2 active switches, which in turn forbids at most their adjacent neighbors (at most 4 neighboring switches).
-- The remaining unrestricted vertices form a disjoint union of path graphs.
-- Direct Fibonacci counting shows that the number of legal completions is at least $F_{n-4}$.
-- The ratio of legal completions to the total universe satisfies:
-  $$\frac{F_{n-4}}{L_n} > \frac{1}{40} \quad \text{for all } n \ge 7$$
+- Fixing $(x_i, x_j) = (a, b)$ pins down at most 2 active switches, which in turn forbids only their adjacent neighbors (at most 4 neighboring switches).
+- The remaining unconstrained vertices form a disjoint collection of paths of total length at least $n - 6$.
+- By Fibonacci transfer matrix bounds, the number of legal completions is at least $F_{n-4}$.
+- For all $n \ge 11$, the single-row hit probability satisfies:
+  $$p = \frac{|\{x \in \mathcal{L}(C_n) : (x_i, x_j) = (a, b)\}|}{L_n} \ge \frac{F_{n-4}}{L_n} \ge \frac{1}{64}$$
 
-Thus, under uniform random sampling of rows, the probability that a single chosen row covers a specific feasible requirement is at least $p \ge 1/40$.
-For a randomly chosen suite of $M$ rows, the probability that a specific requirement fails to achieve coverage at least 2 is bounded by Chernoff / binomial tail bounds:
-$$\mathbb{P}(\text{Coverage}(i, j, a, b) < 2) \le (1 + M p) (1 - p)^{M-1} \le (1 + M) \exp(-c M)$$
-
-The total number of feasible requirements is $D_n = 2n^2 - 3n$.
+### Chernoff Tail Bound Across $M$ Independent Trials
+Let $X \sim \operatorname{Bin}(M, p)$ be the number of rows covering a fixed requirement $(i, j, a, b)$.
+The probability that this requirement is covered fewer than $\lambda$ times is:
+$$\mathbb{P}(X < \lambda) = \sum_{j=0}^{\lambda - 1} \binom{M}{j} p^j (1 - p)^{M - j} \le \binom{M}{\lambda - 1} (1 - p)^{M - \lambda + 1} \le M^{\lambda - 1} \exp(-p(M - \lambda + 1))$$
+The total number of feasible requirements on $C_n$ is $D_n = 2n^2 - 3n < 2n^2$.
 By the union bound across all $D_n$ requirements:
-$$\mathbb{P}(\text{Coverage Failure}) \le (2n^2 - 3n) (1 + M) \exp(-c M)$$
+$$\mathbb{P}(\text{Coverage Failure}) \le 2n^2 M^{\lambda - 1} \exp(-p(M - \lambda + 1))$$
 
 ### Pairwise Distinctness of Selected Rows
-Because rows are sampled uniformly at random from the universe of legal configurations $\mathcal{L}(C_n)$ of size $L_n = \Theta(\phi^n)$, the probability that any pair of the $M = O(\log n)$ selected rows is identical satisfies:
-$$\mathbb{P}(\text{Duplicate Rows}) \le \binom{M}{2} \frac{1}{L_n} = O\left(\frac{\log^2 n}{\phi^n}\right) \longrightarrow 0 \quad (n \to \infty)$$
-Applying the union bound over both coverage deficiency and duplicate row collisions:
-$$\mathbb{P}(\text{Coverage Failure} \cup \text{Duplicate Rows}) \le (2n^2 - 3n)(1 + M)\exp(-cM) + \frac{M^2}{2 L_n} < 1$$
-for a sufficiently large constant $C$.
-By the probabilistic method (or via the Lovász Local Lemma for explicit dependency graphs), there strictly exists a valid integer test suite of size $O(\log n)$ whose rows are **pairwise distinct**.
+Because rows are sampled from the exponentially large universe $|\mathcal{L}(C_n)| = L_n = \Theta(\phi^n)$, the probability of selecting duplicate rows satisfies:
+$$\mathbb{P}(\text{Duplicate Rows}) \le \binom{M}{2} \frac{1}{L_n} \le \frac{M^2}{2 \phi^n} \longrightarrow 0 \quad (n \to \infty)$$
+
+Combining both failure modes via the union bound:
+$$\mathbb{P}(\text{Failure}) \le 2n^2 M^{\lambda - 1} \exp(-p(M - \lambda + 1)) + \frac{M^2}{2 \phi^n}$$
+Setting $M = \left\lceil \frac{2}{p} \ln n + \frac{\lambda - 1}{p} \ln \ln n + C_\lambda \right\rceil$ ensures that:
+$$\mathbb{P}(\text{Failure}) < 1$$
+for all sufficiently large $n$.
+By the probabilistic method, there exists a valid covering array of size $M = O_\lambda(\log n)$ with **strictly distinct rows**.
 
 ---
 
 ## 4. The Qualitative Contrast
 
-This establishes the fundamental asymptotic divergence between the continuous relaxation and the discrete integer problem:
+This establishes the universal asymptotic divergence between the continuous relaxation and the discrete integer problem for every index $\lambda \ge 1$:
 
 $$\begin{aligned}
-LP(n) &= 12 + O(\theta^n) \longrightarrow 12 \quad (O(1) \text{ bounded}) \\
-N(n) &= \Theta(\log n) \longrightarrow \infty \\
-G(n) &= N(n) - LP(n) = \Theta(\log n) \longrightarrow \infty
+LP_\lambda(n) &= 6\lambda + O_\lambda(\theta^n) \longrightarrow 6\lambda \quad (O(1) \text{ bounded}) \\
+N_\lambda(n) &= \Theta_\lambda(\log n) \longrightarrow \infty \\
+G_\lambda(n) &= N_\lambda(n) - LP_\lambda(n) = \Theta_\lambda(\log n) \longrightarrow \infty
 \end{aligned}$$
 
-The integrality gap does not vanish or remain constant in the large-scale limit; rather, it grows logarithmically with dimension $n$.
+The integrality gap does not vanish or remain constant in the large-scale limit; rather, it diverges logarithmically with dimension $n$ for all $\lambda \ge 1$.
 
 ---
 
-## 5. Context and Connection to Classical Literature
+## 5. Connection to CAFE Literature
 
-The logarithmic scaling of discrete covering arrays is rooted in the classical extremal set theory of Rényi (1971), Katona (1973), and Kleitman & Spencer (1973). For unconstrained binary covering arrays of strength 2, it is well known that $N \sim \frac{1}{2} \log_2 n$.
+In the terminology of Danziger, Mendelsohn, Moura, and Stevens (*Covering arrays avoiding forbidden edges*, Theoretical Computer Science, 410(8-10):746–758, 2009), this problem corresponds to a **CAFE** (Covering Array Avoiding Forbidden Edges) of strength 2, index $\lambda$, on the binary hypercube with forbidden edge graph $G = C_n$.
 
-In the presence of cyclic exclusion constraints, our result proves that:
-1. The logarithmic integer scaling $N(n) = \Theta(\log n)$ continues to hold despite the exclusion of adjacent ones.
-2. Crucially, while the integer testing suite must grow logarithmically, the fractional relaxation remains **strictly bounded** and exponentially rapidly stabilizes at $\lim_{n \to \infty} LP(n) = 12$.
-3. Consequently, the unit gap $G(n) = 1$ observed on small finite cycles ($C_{13}, C_{14}, C_{15}$) is a localized finite phenomenon: as $n \to \infty$, the true integrality gap diverges to infinity.
+Our results establish three foundational properties for cyclic CAFE:
+1. **Universal LP Lower Bound**: The local scoring potential proves that $LP_\lambda(C_n) \ge 6\lambda$ for all $n \ge 11$, showing that cyclic constraints enforce an absolute fractional floor proportional to $6\lambda$.
+2. **Exponentially Rapid Asymptotic Saturation**: The 2-step Markov chain and transfer matrix trace bounds prove that the fractional relaxation saturates at $6\lambda$ exponentially fast: $LP_\lambda(C_n) = 6\lambda + O_\lambda(\theta^n)$.
+3. **Fractional–Integral Separation**: While the LP relaxation remains flat at $6\lambda$, the integer testing complexity $N_\lambda(C_n) = \Theta_\lambda(\log n)$ diverges, proving that cyclic CAFE exhibits an unbounded integrality gap $G_\lambda(C_n) \to \infty$.

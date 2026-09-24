@@ -8,20 +8,21 @@
 
 ## 核心定理总览
 
-1. **[T1] 全域普适局部打分与统一下界（对所有 $n \ge 11$）**
+1. **[T1] 全域普适局部打分与统一下界（对所有 $n \ge 11, \lambda \ge 1$）**
    - 证明了对所有合法行，均有 $3P_3(x) + 2P_4(x) + P_5(x) \le n$。
-   - 确立了对所有 $n \ge 11$ 的环拓扑，分数松弛与整数解满足：$LP(n) \ge 12, N(n) \ge 12$。
+   - 确立了对所有 $n \ge 11$ 及任意覆盖指数 $\lambda \ge 1$：$LP_\lambda(n) \ge 6\lambda, N_\lambda(n) \ge 6\lambda$。
 2. **[T2-T4] 小环精确最优值与整数规划间隙（$n = 13, 14, 15$）**
    - 证明了 $LP(13)=LP(14)=LP(15)=12$ 且 $N(13)=N(14)=N(15)=13$。
    - 在这三个连续整数上均存在严格的整数规划间隙 $G(n) = 1$。
    - $C_{13}$ 的不可行性证明即便允许行重复也依然成立。
-3. **[T5] 分数松弛渐近极限收敛定理（最新突破）**
-   - 严格证明了：
-     $$\lim_{n \to \infty} LP(n) = 12$$
-   - 且以指数级速度收敛：$12 \le LP(n) \le 12 + C\theta^n$（其中 $0 < \theta < 1$）。
-   - 构造了记住两步历史间隙的 4 状态马尔可夫链，突破了距离 7 的概率瓶颈，使全距离二元状态概率均 $\ge 1/6$。
-4. **[T6] 整数渐近发散与无穷间隙**
-   - 整数规模 $N(n) = \Theta(\log n)$，与保持有界的分数松弛形成鲜明对比，整数规划间隙趋于无穷大：$G(n) = N(n) - LP(n) \to \infty$。
+3. **[T5] 分数松弛渐近极限收敛定理（对任意指数 $\lambda \ge 1$）**
+   - 严格证明了对任意固定的 $\lambda \ge 1$：
+     $$\lim_{n \to \infty} LP_\lambda(n) = 6\lambda$$
+   - 且以指数级速度收敛：$6\lambda \le LP_\lambda(n) \le 6\lambda + C_\lambda\theta^n$（其中 $0 < \theta < 1$）。
+   - 结合 2 步间隙马尔可夫链证明双向界 $1/6 \le p_d \le 1/4$、10 状态转移矩阵谱间隙与全距离一致迹估计。
+4. **[T6] 任意指数下整数渐近发散与无穷间隙**
+   - 整数规模 $N_\lambda(n) = \Theta_\lambda(\log n)$，与保持有界的分数松弛形成鲜明对比，整数规划间隙趋于无穷大：$G_\lambda(n) = N_\lambda(n) - LP_\lambda(n) \to \infty$。
+   - 确立了 Danziger et al. (TCS 2009) CAFE 体系下环图硬核约束的完整分离性。
 5. **[T7] $C_{17}$ 精确极值与下界闭环定理**
    - 严格证明了 $LP(17) = 12, N(17) = 13$，整数规划间隙 $G(17) = 1$。
    - 通过 51 位位并行 DFS 遍历 54,310 个节点，严格排除了 119 个等号行上的所有 12 行解（即使允许行重复依然不存解）。
@@ -50,6 +51,7 @@
 python verifiers/verify_all.py
 ```
 
+- `python verifiers/verify_general_lambda.py`：独立复核任意指数 $\lambda \in [1, 5]$ 与 $n \in [11, 30]$ 全量 3900 个有理数不等式。
 - `python verifiers/verify_markov_chain.py`：独立复核 2 步间隙马尔可夫链、全距离有理数递推表与归纳基例。
 - `python verifiers/verify_c13.py`：独立复核 $C_{13}$ 整数间隙代数证书。
 - `python verifiers/verify_c14.py`：独立复核 $C_{14}$ 模 7 同余矛盾证书。
@@ -57,7 +59,7 @@ python verifiers/verify_all.py
 - `python verifiers/verify_c17.py`：独立复核 $C_{17}$ 的 54,310 节点精确位并行 DFS 排斥证书。
 - `python verifiers/verify_c17_boundary.py`：复核 $C_{17}$ 壁垒分析（评分见证及非半正合格拉姆候选）。
 - `python verifiers/verify_c19.py`：独立复核 $C_{19}$ 的 726,693 节点精确位并行 DFS 排斥证书与 13 行显式解。
-- **`python verifiers/verify_even_cycles_and_c21.py`**：独立复核 $C_{16}, C_{18}, C_{20}$ 及 $C_{21}$ 的显式 13 行解。
+- **`python verifiers/verify_even_cycles_and_c21.py`**：独立复核 $C_{16}, C_{18}, C_{20}$ 及 $C_{21}$ 的显式 13 行解与分数 LP 见证。
 - **`python solve_c20.py --mode tight`**：复跑 $C_{20}$ CP-SAT 精确求解与 12 行排斥判定。
 - **`python solve_c21.py`**：复跑 $C_{21}$ CP-SAT 精确求解与 12 行排斥判定。
 

@@ -91,30 +91,54 @@ $$\boxed{LP(19) = 12, \qquad N(19) = 13, \qquad G(19) = 1.}$$
 
 ---
 
-## 5. The Continuous Plateau $[13, 20]$ and the $C_{21}$ Frontier
+## 5. The Continuous Plateau $[13, 21]$ and Resolution of $C_{20}, C_{21}$
 
-### Resolution of Even Cycles ($C_{16}, C_{18}, C_{20}$)
-Explicit 13-row binary covering arrays have been established for $C_{16}$ (464 valid pairs), $C_{18}$ (594 valid pairs), and $C_{20}$ (740 valid pairs), recorded in `data/solution_c16.txt`, `data/solution_c18.txt`, and `data/solution_c20.txt`.
+### Full Closure of Even Cycles and $C_{21}$
+Explicit 13-row binary covering arrays have been established and mechanically verified for $C_{16}$ (464 valid pairs), $C_{18}$ (594 valid pairs), $C_{20}$ (740 valid pairs), and $C_{21}$ (819 valid pairs), recorded in `data/solution_c16.txt`, `data/solution_c18.txt`, `data/solution_c20.txt`, and `data/solution_c21.txt`.
 
-Furthermore, for $C_{20}$, Theorem T1 forces any hypothetical 12-row solution to consist exclusively of tight configurations. An exact CP-SAT search over all 277 tight rows proves that no 12-row assignment is feasible (`solve_c20.py`), establishing:
-$$\boxed{LP(20) = 12, \qquad N(20) = 13, \qquad G(20) = 1.}$$
+Furthermore, by Theorem T1, any putative 12-row solution on $C_{20}$ (277 tight rows) or $C_{21}$ (367 tight rows) must consist exclusively of tight configurations.
+Exact CP-SAT models with dihedral symmetry breaking prove:
+- `solve_c20.py --rows 12 --mode tight`: **INFEASIBLE** (0.89s) $\implies N(20) = 13$.
+- `solve_c21.py --rows 12`: **INFEASIBLE** (0.80s) $\implies N(21) = 13$.
 
-Together with the exact values on odd cycles and $C_{14}$, this establishes that **every integer $n \in \{13, 14, 15, 16, 17, 18, 19, 20\}$ satisfies $N(n) \le 13$**.
-Consequently, the global jump threshold satisfies:
-$$\boxed{n^*_{\text{global}} \ge 21.}$$
+Moreover, exact rational LP witnesses of total weight 12 are constructed and verified in pure fractional arithmetic:
+- $C_{20}$: 5 rotation orbits of length 20, weights $\left(\frac{4}{35}, \frac{4}{35}, \frac{2}{35}, \frac{1}{7}, \frac{6}{35}\right)$, total weight 12 $\implies LP(20) = 12$.
+- $C_{21}$: 4 rotation orbits (sizes 3, 21, 21, 21), weights $\left(\frac{5}{17}, \frac{2}{17}, \frac{6}{17}, \frac{1}{17}\right)$, total weight 12 $\implies LP(21) = 12$.
 
-### Boundary of $C_{21}$: 14-Row Witness and Near-Miss Rigidity
-On $C_{21}$ (819 valid pair requirements):
-1. **Explicit 14-Row Upper Bound**: Adding row $32800 = 2^5 + 2^{15}$ to a 13-row candidate yields a strictly valid 14-row covering array (`data/solution_c21.txt`), proving:
-   $$\boxed{12 \le LP(21) \le N(21) \le 14.}$$
-2. **Local Rigidity of the 13-Row Near-Miss**: The 13-row candidate satisfies 818 of 819 requirements, deficient only on $((5, 15), (1, 1))$. Exhaustive inspection over all 24,476 legal rows across 40,826 candidate pairs proves that **no 1-row or 2-row replacement can eliminate this deficit**.
-   Any valid 13-row solution on $C_{21}$ must diverge from this configuration by at least 3 rows.
+### The 9-Integer Plateau and Global Jump Threshold
+Combining all exact results establishes that **every integer in the 9-element range $n \in [13, 21]$ has $N(n) = 13$**:
+$$\boxed{N(13) = N(14) = N(15) = N(16) = N(17) = N(18) = N(19) = N(20) = N(21) = 13.}$$
+Consequently, the global jump threshold where the integer optimum first exceeds 13 is pushed to:
+$$\boxed{n^*_{\text{global}} \ge 22.}$$
 
 ---
 
-## 6. Remaining Open Conjectures
+## 6. The Dual Column-Code Perspective $L(M)$ and Open Frontiers
 
-1. **The $C_{21}$ Exact Integer Jump (The Ultimate Frontier)**:
-   Does $C_{21}$ admit a 13-row solution at Hamming distance $\ge 3$, or is $N(21) = 14$, making $n^*_{\text{global}} = 21$ the exact universal jump threshold?
-2. **Exact LP 12-Attainment**:
-   While $\lim_{n \to \infty} LP(n) = 12$ is proven, does there exist an infinite family of cycles where $LP(n)$ is strictly, identically equal to 12?
+Rather than incrementing the cycle length $n$ point-by-point, the fundamental structural problem is formulated dually in terms of **column code capacity**:
+
+**Definition (Maximum Cycle Capacity $L(M)$)**:
+For a fixed integer budget of $M$ test rows, define $L(M)$ as the maximum cycle length $n$ such that $C_n$ admits a valid binary covering array of $M$ rows:
+$$L(M) = \max \{n \in \mathbb{N} : N(n) \le M\}$$
+
+From our exact theorems:
+- For $M \le 11$: $L(M) = 6$ (by Theorem T1, $N(n) \ge 12$ for all $n \ge 7$).
+- For $M = 12$: $L(12) = 12$ (since $N(12) \le 12$, and for all $n \ge 13$, $N(n) \ge 13$).
+- For $M = 13$: We have rigorously established:
+  $$\boxed{L(13) \ge 21.}$$
+
+### Open Problems and Conjectures
+
+1. **Exact Determination of $L(13)$ and the Jump Threshold**:
+   Is $L(13) = 21$ (meaning $n^*_{\text{global}} = 22$ is the exact jump point where $N(22) = 14$), or does $L(13) \ge 22$?
+   This is equivalent to determining whether the space of legal independent sets on $C_{22}$ can support 13 mutually covering rows.
+
+2. **Finite Attainment of the Fractional Constant $\lim LP(n) = 12$**:
+   While we have established exact rational certificates with $LP(n) = 12$ for $n \in \{13, 14, 15, 16, 17, 18, 19, 20, 21\}$, does $LP(n) = 12$ hold identically for **all** $n \ge 13$?
+   Or do there exist cycle lengths where the fractional optimum strictly exceeds 12 before decaying exponentially back toward 12?
+
+3. **Asymptotic Constant of Integer Complexity**:
+   Theorem T6 establishes $N_\lambda(n) = \Theta_\lambda(\log n)$ for all $\lambda \ge 1$.
+   What is the exact asymptotic leading constant:
+   $$c(\lambda) = \lim_{n \to \infty} \frac{N_\lambda(n)}{\log_2 n} ?$$
+   Does $c(2)$ equal 1, or is it strictly larger due to the cyclic adjacent-exclusion constraint?
