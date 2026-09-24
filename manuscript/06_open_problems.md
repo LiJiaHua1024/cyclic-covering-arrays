@@ -1,6 +1,6 @@
-# Chapter 6: Open Problems, the Boundary of $C_{17}$, and Structural Barriers
+# Chapter 6: Open Problems, Structural Barriers, and the New Frontier
 
-## 1. The Boundary of $C_{17}$ and Why $N(17)=13$ Remains Open
+## 1. The Structure of $C_{17}$ and Why Classical Reductions Failed
 
 For $C_{17}$, tight configurations from $\{2, 3\}$-gap words correspond to $2a + 3b = 17 \implies (a, b) \in \{(7, 1), (4, 3), (1, 5)\}$.
 This generates exactly **119 tight rows partitioned into 7 rotation orbits of length 17**:
