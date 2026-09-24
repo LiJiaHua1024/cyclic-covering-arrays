@@ -15,7 +15,7 @@ This repository contains the unified research monograph, exact mechanical certif
 | **[T1] Universal Lower Bound** | All $n \ge 11$ | $3P_3(x) + 2P_4(x) + P_5(x) \le n \implies LP(n) \ge 12, N(n) \ge 12$ | Exact potential proof |
 | **[T2] $C_{13}$ Integrality Gap** | $n = 13$ | $LP(13) = 12, N(13) = 13$ (infeasible even with row repeats) | `verify_c13.py` |
 | **[T3] $C_{14}$ Exact Optimum** | $n = 14$ | $LP(14) = 12, N(14) = 13$ (modulo 7 & subset-sum obstruction) | `verify_c14.py` (DOI: `10.5281/zenodo.22918432`) |
-| **[T4] $C_{15}$ Exact Optimum** | $n = 15$ | $LP(15) = 12, N(15) = 13$ (finite field rank certificate) | Exact rank certificate |
+| **[T4] $C_{15}$ Exact Optimum** | $n = 15$ | $LP(15) = 12, N(15) = 13$ ($\mathbb{F}_2$ rank obstruction on Gram matrix) | `verify_c15.py` |
 | **[T5] Asymptotic LP Limit** | $n \to \infty$ | $\displaystyle\lim_{n \to \infty} LP(n) = 12$, with rate $12 \le LP(n) \le 12 + C\theta^n$ | `verify_markov_chain.py` |
 | **[T6] Asymptotic Gap Divergence** | $n \to \infty$ | $N(n) = \Theta(\log n) \implies G(n) = N(n) - LP(n) \to \infty$ | Coding theory / Lovász Local Lemma |
 
@@ -33,6 +33,7 @@ To run individual verifiers:
 - **Markov Chain Convergence**: `python verifiers/verify_markov_chain.py`
 - **$C_{13}$ Integrality Gap**: `python verifiers/verify_c13.py`
 - **$C_{14}$ Exact Certificate**: `python verifiers/verify_c14.py`
+- **$C_{15}$ $\mathbb{F}_2$ Rank Certificate**: `python verifiers/verify_c15.py`
 
 ---
 
@@ -48,10 +49,12 @@ To run individual verifiers:
 │   ├── verify_all.py           # Master runner
 │   ├── verify_markov_chain.py  # Rational arithmetic Markov recurrence
 │   ├── verify_c13.py           # C13 exact certificate
-│   └── verify_c14.py           # C14 exact certificate
+│   ├── verify_c14.py           # C14 exact certificate
+│   └── verify_c15.py           # C15 GF(2) rank certificate
 ├── data/                       # Concrete test suite constructions
 │   ├── solution_c13.txt        # 13x13 binary matrix
-│   └── solution_c14.txt        # 13x14 binary matrix
+│   ├── solution_c14.txt        # 13x14 binary matrix
+│   └── solution_c15.txt        # 13x15 binary matrix
 └── history/                    # Superseded bounds (80, 36, 144/11)
 ```
 

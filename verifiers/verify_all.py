@@ -34,6 +34,7 @@ def main():
         "verify_markov_chain.py",
         "verify_c13.py",
         "verify_c14.py",
+        "verify_c15.py",
     ]
     all_ok = True
     for s in scripts:

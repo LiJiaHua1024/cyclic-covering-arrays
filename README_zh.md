@@ -36,6 +36,7 @@ python verifiers/verify_all.py
 - `python verifiers/verify_markov_chain.py`：独立复核 2 步间隙马尔可夫链、全距离有理数递推表与归纳基例。
 - `python verifiers/verify_c13.py`：独立复核 $C_{13}$ 整数间隙代数证书。
 - `python verifiers/verify_c14.py`：独立复核 $C_{14}$ 模 7 同余矛盾证书。
+- `python verifiers/verify_c15.py`：独立复核 $C_{15}$ 的 4823 个 $\mathbb{F}_2$ 秩证书与有理数见证。
 
 ---
 
