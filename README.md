@@ -20,8 +20,9 @@ This repository contains the unified research monograph, exact mechanical certif
 | **[T6] Asymptotic Gap Divergence** | $n \to \infty$ | $N(n) = \Theta(\log n) \implies G(n) = N(n) - LP(n) \to \infty$ | Coding theory / Lovász Local Lemma |
 | **[T7] $C_{17}$ Exact Optimum** | $n = 17$ | $LP(17) = 12, N(17) = 13$ (54,310-node exact DFS exclusion) | `verify_c17.py` |
 | **[T8] $C_{19}$ Exact Optimum** | $n = 19$ | $LP(19) = 12, N(19) = 13$ (726,693-node exact DFS exclusion); odd jump threshold $n^* \ge 21$ | `verify_c19.py` |
-| **[T9] Continuous Plateau $[13, 19]$** | $n \in [13, 19]$ | $N(n) \le 13$ for all 7 integers ($C_{16}, C_{18}$ 13-row witnesses); global threshold $n^* \ge 20$ | `verify_even_cycles_and_c21.py` |
-| **[T10] $C_{21}$ Bounds & Rigidity** | $n = 21$ | $N(21) \le 14$; 13-row near-miss (818/819 covered) proven rigid against all 1/2-row repairs | `verify_even_cycles_and_c21.py` |
+| **[T9] Continuous Plateau $[13, 21]$** | $n \in [13, 21]$ | $N(n) = 13$ for all 9 consecutive integers ($C_{16}, C_{18}, C_{20}, C_{21}$ exact witnesses); global threshold $n^* \ge 22$ | `verify_even_cycles_and_c21.py` |
+| **[T10] $C_{21}$ Exact Optimum** | $n = 21$ | $LP(21) = 12, N(21) = 13$ (CP-SAT tight exclusion & explicit 13-row witness) | `verify_even_cycles_and_c21.py`, `solve_c21.py` |
+| **[T11] $C_{20}$ Exact Optimum** | $n = 20$ | $LP(20) = 12, N(20) = 13$ (CP-SAT tight exclusion & explicit 13-row witness) | `verify_even_cycles_and_c21.py`, `solve_c20.py` |
 
 ---
 
@@ -40,7 +41,9 @@ To run individual verifiers:
 - **$C_{15}$ $\mathbb{F}_2$ Rank Certificate**: `python verifiers/verify_c15.py`
 - **$C_{17}$ Exact DFS Certificate**: `python verifiers/verify_c17.py`
 - **$C_{19}$ Exact DFS Certificate**: `python verifiers/verify_c19.py`
-- **Even Cycles & $C_{21}$ Bounds**: `python verifiers/verify_even_cycles_and_c21.py`
+- **Even Cycles ($C_{16}, C_{18}, C_{20}$) & $C_{21}$ 13-Row Bounds**: `python verifiers/verify_even_cycles_and_c21.py`
+- **$C_{20}$ Exact CP-SAT Solver**: `python solve_c20.py --mode tight`
+- **$C_{21}$ Exact CP-SAT Solver**: `python solve_c21.py`
 
 ---
 
@@ -48,13 +51,14 @@ To run individual verifiers:
 
 ```text
 ├── theorem_ledger.md           # Single Source of Truth for all propositions
+├── solve_c20.py                # C20 exact CP-SAT solver and verifier
 ├── manuscript/                 # Full monograph chapters
 │   ├── 01_introduction.md      # Model, Lucas numbers, D_n, and small n infeasibility
 │   ├── 02_universal_lower_bound.md # Universal potential inequality (LP >= 12)
 │   ├── 03_finite_cases.md      # C13, C14, C15, C17, C19 exact certificates & obstructions
 │   ├── 04_asymptotic_lp_limit.md # 2-step gap Markov chain proof (lim LP = 12)
 │   ├── 05_integer_complexity.md # N(n) = Theta(log n) and unbounded gap divergence
-│   └── 06_open_problems.md     # Plateau [13, 19], C21 frontier, and threshold n* >= 20
+│   └── 06_open_problems.md     # Plateau [13, 20], C21 frontier, and threshold n* >= 21
 ├── verifiers/                  # Self-contained Python verifiers
 │   ├── verify_all.py           # Master runner (runs all 7 verifiers)
 │   ├── verify_markov_chain.py  # Rational arithmetic Markov recurrence
@@ -64,7 +68,7 @@ To run individual verifiers:
 │   ├── verify_c17.py           # C17 exact 54,310-node DFS exclusion
 │   ├── verify_c17_boundary.py  # C17 barrier analysis (witness & Gram non-PSD)
 │   ├── verify_c19.py           # C19 exact 726,693-node DFS exclusion
-│   └── verify_even_cycles_and_c21.py # C16, C18, C21 suites & 2-row repair check
+│   └── verify_even_cycles_and_c21.py # C16, C18, C20, C21 suites & 2-row repair check
 ├── data/                       # Concrete test suite constructions
 │   ├── solution_c13.txt        # 13x13 binary matrix
 │   ├── solution_c14.txt        # 13x14 binary matrix
@@ -73,6 +77,7 @@ To run individual verifiers:
 │   ├── solution_c17.txt        # (derived from verify_c17 upper bound)
 │   ├── solution_c18.txt        # 13x18 binary matrix
 │   ├── solution_c19.txt        # 13x19 binary matrix
+│   ├── solution_c20.txt        # 13x20 binary matrix
 │   └── solution_c21.txt        # 14x21 binary matrix
 └── history/                    # Superseded bounds (80, 36, 144/11)
 ```

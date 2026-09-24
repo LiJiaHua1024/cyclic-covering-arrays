@@ -16,13 +16,20 @@ SUITES = {
         76362, 86674, 43689, 174418, 152746, 87369, 76453,
         150100, 168612, 38229, 173354, 84261, 74901,
     ],
+    20: [
+        149845, 169129, 300370, 305829, 337225, 346410, 348821,
+        600658, 611474, 611620, 676426, 697684, 699050,
+    ],
 }
 
 NEAR_21 = [
     338517, 599338, 608914, 693589, 1223338, 1348170, 676517,
     1201490, 349353, 698697, 1352852, 1397066, 1394980,
 ]
-SUITES[21] = NEAR_21 + [32800]
+SUITES[21] = [
+    299605, 338213, 599189, 600658, 608841, 676517, 693546,
+    697673, 1198418, 1223316, 1354410, 1397930, 1398100,
+]
 
 
 def bit(mask, i, n):
@@ -178,10 +185,15 @@ def main():
     assert not f18 and c18 == 594
     print("PASS: C18 verified (13 rows; 594 requirements covered >= 2).")
 
-    # Verify C21 (14 rows, 819 requirements)
+    # Verify C20 (13 rows, 740 requirements)
+    f20, c20 = inspect(20, SUITES[20])
+    assert not f20 and c20 == 740
+    print("PASS: C20 verified (13 rows; 740 requirements covered >= 2).")
+
+    # Verify C21 (13 rows, 819 requirements)
     f21, c21 = inspect(21, SUITES[21])
     assert not f21 and c21 == 819
-    print("PASS: C21 verified (14 rows; 819 requirements covered >= 2).")
+    print("PASS: C21 verified (13 rows; 819 requirements covered >= 2).")
 
     # Verify C21 repair obstruction
     verify_c21_repair_obstruction()

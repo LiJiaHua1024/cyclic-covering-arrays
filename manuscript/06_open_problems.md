@@ -91,13 +91,17 @@ $$\boxed{LP(19) = 12, \qquad N(19) = 13, \qquad G(19) = 1.}$$
 
 ---
 
-## 5. The Continuous Plateau $[13, 19]$ and the $C_{21}$ Frontier
+## 5. The Continuous Plateau $[13, 20]$ and the $C_{21}$ Frontier
 
-### Resolution of Even Cycles ($C_{16}$ and $C_{18}$)
-Explicit 13-row binary covering arrays have been established for $C_{16}$ (464 valid pairs) and $C_{18}$ (594 valid pairs), recorded in `data/solution_c16.txt` and `data/solution_c18.txt`.
-Together with the exact values on odd cycles and $C_{14}$, this establishes that **every integer $n \in \{13, 14, 15, 16, 17, 18, 19\}$ satisfies $N(n) \le 13$**.
+### Resolution of Even Cycles ($C_{16}, C_{18}, C_{20}$)
+Explicit 13-row binary covering arrays have been established for $C_{16}$ (464 valid pairs), $C_{18}$ (594 valid pairs), and $C_{20}$ (740 valid pairs), recorded in `data/solution_c16.txt`, `data/solution_c18.txt`, and `data/solution_c20.txt`.
+
+Furthermore, for $C_{20}$, Theorem T1 forces any hypothetical 12-row solution to consist exclusively of tight configurations. An exact CP-SAT search over all 277 tight rows proves that no 12-row assignment is feasible (`solve_c20.py`), establishing:
+$$\boxed{LP(20) = 12, \qquad N(20) = 13, \qquad G(20) = 1.}$$
+
+Together with the exact values on odd cycles and $C_{14}$, this establishes that **every integer $n \in \{13, 14, 15, 16, 17, 18, 19, 20\}$ satisfies $N(n) \le 13$**.
 Consequently, the global jump threshold satisfies:
-$$\boxed{n^*_{\text{global}} \ge 20.}$$
+$$\boxed{n^*_{\text{global}} \ge 21.}$$
 
 ### Boundary of $C_{21}$: 14-Row Witness and Near-Miss Rigidity
 On $C_{21}$ (819 valid pair requirements):
@@ -110,10 +114,7 @@ On $C_{21}$ (819 valid pair requirements):
 
 ## 6. Remaining Open Conjectures
 
-1. **The $C_{21}$ Exact Integer Jump**:
-   Does $C_{21}$ admit a 13-row solution at Hamming distance $\ge 3$, or is $N(21) = 14$, making $n^*_{\text{odd}} = 21$ the exact odd-cycle jump threshold?
-2. **Cycle $C_{20}$**:
-   Does $C_{20}$ admit a 13-row solution, or does the global jump occur at $n^*_{\text{global}} = 20$?
-3. **Exact LP 12-Attainment**:
+1. **The $C_{21}$ Exact Integer Jump (The Ultimate Frontier)**:
+   Does $C_{21}$ admit a 13-row solution at Hamming distance $\ge 3$, or is $N(21) = 14$, making $n^*_{\text{global}} = 21$ the exact universal jump threshold?
+2. **Exact LP 12-Attainment**:
    While $\lim_{n \to \infty} LP(n) = 12$ is proven, does there exist an infinite family of cycles where $LP(n)$ is strictly, identically equal to 12?
-   Verified independently in `verifiers/verify_even_cycles_and_c21.py`.

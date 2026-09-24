@@ -55,10 +55,15 @@ $$\mathbb{P}(\text{Coverage}(i, j, a, b) < 2) \le (1 + M p) (1 - p)^{M-1} \le (1
 
 The total number of feasible requirements is $D_n = 2n^2 - 3n$.
 By the union bound across all $D_n$ requirements:
-$$\mathbb{P}(\text{Failure}) \le (2n^2 - 3n) (1 + M) \exp(-c M)$$
-Choosing $M = C \log n$ for a sufficiently large constant $C$ drives this failure probability strictly below 1:
-$$\mathbb{P}(\text{Failure}) < 1$$
-By the probabilistic method (or via the Lovász Local Lemma for explicit dependency graphs), there exists a valid integer test suite of size $O(\log n)$.
+$$\mathbb{P}(\text{Coverage Failure}) \le (2n^2 - 3n) (1 + M) \exp(-c M)$$
+
+### Pairwise Distinctness of Selected Rows
+Because rows are sampled uniformly at random from the universe of legal configurations $\mathcal{L}(C_n)$ of size $L_n = \Theta(\phi^n)$, the probability that any pair of the $M = O(\log n)$ selected rows is identical satisfies:
+$$\mathbb{P}(\text{Duplicate Rows}) \le \binom{M}{2} \frac{1}{L_n} = O\left(\frac{\log^2 n}{\phi^n}\right) \longrightarrow 0 \quad (n \to \infty)$$
+Applying the union bound over both coverage deficiency and duplicate row collisions:
+$$\mathbb{P}(\text{Coverage Failure} \cup \text{Duplicate Rows}) \le (2n^2 - 3n)(1 + M)\exp(-cM) + \frac{M^2}{2 L_n} < 1$$
+for a sufficiently large constant $C$.
+By the probabilistic method (or via the Lovász Local Lemma for explicit dependency graphs), there strictly exists a valid integer test suite of size $O(\log n)$ whose rows are **pairwise distinct**.
 
 ---
 
