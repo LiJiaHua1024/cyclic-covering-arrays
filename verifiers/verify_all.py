@@ -36,6 +36,7 @@ def main():
         "verify_c14.py",
         "verify_c15.py",
         "verify_c17.py",
+        "verify_c19.py",
     ]
     all_ok = True
     for s in scripts:

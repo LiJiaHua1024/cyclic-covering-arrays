@@ -58,15 +58,45 @@ violating the positive-semidefiniteness required of any true Gram matrix $K = Y^
 
 ---
 
-## 4. Resolution of $C_{17}$ and the Frontier at $C_{19}$
+## 4. Resolution of $C_{17}$ and the $C_{19}$ Frontier
 
-The residual coverage barrier (Path 1) has been completely resolved:
+The residual coverage barrier (Path 1) on $C_{17}$ has been completely resolved:
 By implementing an exact, bit-parallel depth-first search traversing **54,310 nodes**, `verifiers/verify_c17.py` proves that no 12-row selection from the 119 tight rows can simultaneously achieve the pairwise lower bounds on distances 6, 7, and 8.
 Thus, $N(17) = 13$ is strictly closed (Theorem T7, Chapter 3).
 
-### Remaining Open Conjectures
-1. **The $C_{19}$ Frontier and Integer Jump**:
-   With $N(13) = N(14) = N(15) = N(17) = 13$, the unit gap $G(n) = 1$ is now verified across all small cycles up to $n=17$.
-   What is the smallest cycle length $n^*$ where $N(n^*)$ first transitions to $14$? Does $C_{19}$ still have $N(19) = 13$?
-2. **Exact LP 12-Attainment**:
+### Progress on $C_{19}$: Explicit 13-Row Construction
+
+Moving to $C_{19}$, an explicit 13-row binary covering array has been constructed:
+$$\begin{aligned}
+\text{Rows} = \{ &152745, 150101, 337044, 305834, 86693, 169290, 173349, \\
+&76361, 174738, 346410, 299604, 349522, 43349 \}
+\end{aligned}$$
+This witness strictly satisfies:
+- All 13 rows are pairwise distinct and forbid adjacent $11$ along the 19-cycle.
+- All **665 valid pairwise column interactions** across distances $d \in \{1, \dots, 9\}$ achieve coverage $\ge 2$.
+
+Combined with the universal potential lower bound $LP(19) \ge 12$, this establishes:
+$$\boxed{12 \le LP(19) \le N(19) \le 13.}$$
+
+**Immediate Consequence for the Odd-Cycle Jump Threshold**:
+Because $N(13) = N(14) = N(15) = N(17) = 13$ and $N(19) \le 13$, the smallest odd cycle length $n^*$ where the integer optimum first exceeds 13 must satisfy:
+$$\boxed{n^*_{\text{odd}} \ge 21.}$$
+Thus, $n=19$ is **not** the jump threshold.
+
+### Structure of Tight Rows on $C_{19}$
+Analysis of $\{2, 3\}$-gap words on $C_{19}$ reveals:
+- Exactly **209 tight rows**, partitioned into **11 rotation orbits of full length 19**.
+- Any 12-row candidate must satisfy the rigid column weight $c_i = 5$ and distance-2 coverage $t_i = 3$ for all $i \in \{0, \dots, 18\}$.
+- Verifying whether 12 rows can be ruled out on these 209 rows constitutes the immediate mechanical frontier to determine whether $N(19) = 13$.
+
+---
+
+## 5. Remaining Open Conjectures
+
+1. **Exact Optimum $N(19)$**:
+   Does $C_{19}$ possess a 12-row solution among its 209 tight rows, or does exhaustive branch-and-bound force $N(19) = 13$?
+2. **First Jump to 14**:
+   Is $n^* = 21$ the first odd cycle requiring $N(21) \ge 14$, or does 13-row sufficiency extend further?
+3. **Exact LP 12-Attainment**:
    While $\lim_{n \to \infty} LP(n) = 12$ is proven, does there exist an infinite family of cycles where $LP(n)$ is strictly, identically equal to 12?
+   Verified independently in `verifiers/verify_c19.py`.
