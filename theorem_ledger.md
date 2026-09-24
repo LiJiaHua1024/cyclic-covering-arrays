@@ -7,12 +7,14 @@
 
 ## 一、 已严格证明并有机械验证证书的定理 (Theorems)
 
-- **[T1] 环图普适局部打分定理与统一下界**
-  - **内容**：对所有 $n \ge 11$，任意合法环形独立集行向量 $x$ 均满足：
-    $$3P_3(x) + 2P_4(x) + P_5(x) \le n$$
+- **[T1] 环图普适局部打分定理与任意指数 $\lambda$ 统一下界**
+  - **内容**：对所有 $n \ge 11$ 及任意整数覆盖重数 $\lambda \ge 1$：
+    任意合法环形独立集行向量 $x$ 均满足局部打分不等式 $3P_3(x) + 2P_4(x) + P_5(x) \le n$。
     等号成立当且仅当相邻 1 之间的所有环间隙均属于 $\{2, 3\}$。
-  - **推论**：对所有 $n \ge 11$，分数松弛下界 $LP(n) \ge 12$，整数测试规模下界 $N(n) \ge 12$。
-  - **验证**：已在 `verify_c13.py` 和 `verify_c14.py` 中全域通过。
+  - **推论**：对所有 $n \ge 11$ 与 $\lambda \ge 1$：
+    $$LP_\lambda(n) \ge 6\lambda, \qquad N_\lambda(n) \ge 6\lambda$$
+    若整数解规模恰为 $6\lambda$ 行，其每一行都必须为紧致行（间隙在 $\{2, 3\}$ 内）。
+  - **验证**：已在 `verify_c13.py` ~ `verify_c21.py` 及 `verify_general_lambda.py` 中全域通过。
 
 - **[T2] $C_{13}$ 纯整数规划间隙定理**
   - **内容**：$LP(13) = 12, \quad N(13) = 13, \quad \text{Gap } G(13) = 1$。
@@ -31,21 +33,25 @@
   - **证书**：6 个旋转类共 68 个等号行。奇环刚性 $c_i=5, t_i=3$ 结合剩余距离约束，迫使 $15 \times 15$ 列交集格拉姆矩阵 $K = Y^T Y \equiv I + A(\text{dist 2}) + A(E) \pmod 2$（其中 $E$ 为大小 $h \in \{3,4,5\}$ 的距离 6 边集）。穷举全部 4823 种边集，在 $\mathbb{F}_2$ 上的秩均至少为 13，与 $Y$ 仅有 12 行矛盾。
   - **验证脚本**：`verifiers/verify_c15.py`（~1.5 秒通过全部 4823 例消元）。
 
-- **[T5] 分数松弛渐近极限收敛定理（最新突破）**
-  - **内容**：分数松弛的无穷渐近极限严格等于 12：
-    $$\lim_{n \to \infty} LP(n) = 12$$
-    且存在常数 $C > 0, 0 < \theta < 1$，对所有充分大的 $n$ 满足：
-    $$12 \le LP(n) \le 12 + C \theta^n$$
-  - **构造机制**：
-    - 状态集合为连续双间隙 $\{22, 23, 32, 33\}$ 的一阶马尔可夫链，转移矩阵 $P$ 平稳分布 $\pi = (2/5, 1/5, 1/5, 1/5)$，1 的密度 $\rho = 5/12$。
-    - 严格证明了对所有距离 $d \ge 2$，双点 $11$ 概率 $p_d \ge 1/6$（且 $p_3=p_4=p_5=p_7=1/6$），非相邻可行状态概率均 $\ge 1/6$。
-    - 利用有限状态转移算子 Perron-Frobenius 谱间隙证明了环上周期加权分布指数收敛到平稳过程。
-  - **验证脚本**：`verifiers/verify_markov_chain.py`（纯有理数递推精确通过）。
+- **[T5] 分数松弛普适常数极限收敛定理（任意指数 $\lambda \ge 1$）**
+  - **内容**：对任意固定的正整数指数 $\lambda \ge 1$，分数松弛的无穷渐近极限严格等于常数 $6\lambda$：
+    $$\lim_{n \to \infty} LP_\lambda(n) = 6\lambda$$
+    且存在与 $\lambda$ 无关的常数 $0 < \theta < 1$，使得充分大的 $n$ 满足指数收敛：
+    $$6\lambda \le LP_\lambda(n) \le 6\lambda + C_\lambda \theta^n$$
+  - **构造机制与严密证明**：
+    - **双点概率双向界**：2-步间隙马尔可夫链证明对所有非相邻距离 $d \ge 2$ 均有 $\frac{1}{6} \le p_d \le \frac{1}{4}$（其中上界保证了 $01, 10$ 概率 $\rho - p_d \ge 1/6$）。
+    - **10 状态位点转移矩阵**：展开为不可约非周期转移算子 $T$，由 Perron-Frobenius 谱间隙给出几何收敛。
+    - **一致迹估计**：对所有距离 $1 \le d \le \lfloor n/2 \rfloor$，通过 $T^{n-d} = \Pi + O(\alpha^{n/2})$ 获得全距离一致误差界，确立所有状态概率均有 $c_n = 1/6 + O(\theta^n)$。
+    - **显式分数行权重**：$y_r(\lambda) = \frac{\lambda \mu_n(r)}{c_n}$，总权和为 $\frac{\lambda}{c_n} = 6\lambda + O_\lambda(\theta^n)$。
+  - **验证脚本**：`verifiers/verify_markov_chain.py` 及 `verifiers/verify_general_lambda.py`（全有理数递推，$\lambda \in [1, 5], n \in [11, 30]$ 全部 3900 个不等式 100% 通过）。
 
-- **[T6] 整数测试规模的渐近复杂度与无界间隙**
-  - **内容**：整数规模 $N(n) = \Theta(\log n)$。
-  - **推论**：整数与分数松弛之间的真实间隙随环长对数发散：
-    $$G(n) = N(n) - LP(n) = \Theta(\log n) \to \infty$$
+- **[T6] 任意指数下整数测试规模对数发散与无界间隙定理**
+  - **内容**：对任意固定整数 $\lambda \ge 1$：
+    $$N_\lambda(n) = \Theta_\lambda(\log n)$$
+    $$G_\lambda(n) = N_\lambda(n) - LP_\lambda(n) = \Theta_\lambda(\log n) \to \infty$$
+  - **信息论下界**：最大独立集列向量的球覆盖界给出 $N_\lambda(n) \ge 1 + \log_2 k + \log_2(\sum_{j=0}^{\lambda-1} \binom{M}{j})$。
+  - **概率法上界**：基于子图限制映射给出单行命中率下界 $p_e \ge 1/64$；结合 Chernoff 尾部与生日碰撞界，严格保证所选 $O_\lambda(\log n)$ 行两两互异。
+  - **文献对照**：正式确立了在 Danziger et al. (TCS 2009) CAFE 体系下环图硬核约束的完整分离性。
 
 - **[T7] $C_{17}$ 精确极值与下界闭环定理（最新重大闭环）**
   - **内容**：$LP(17) = 12, \quad N(17) = 13, \quad \text{Gap } G(17) = 1$。
