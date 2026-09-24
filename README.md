@@ -42,9 +42,12 @@ To run individual verifiers:
 ```text
 ├── theorem_ledger.md           # Single Source of Truth for all propositions
 ├── manuscript/                 # Full monograph chapters
-│   ├── 02_universal_lower_bound.md
-│   ├── 03_finite_cases.md      # C13, C14, C15 exact certificates
-│   └── 04_asymptotic_lp_limit.md # 2-step gap Markov chain proof
+│   ├── 01_introduction.md      # Model, Lucas numbers, D_n, and small n infeasibility
+│   ├── 02_universal_lower_bound.md # Universal potential inequality (LP >= 12)
+│   ├── 03_finite_cases.md      # C13, C14, C15 exact certificates & rank obstruction
+│   ├── 04_asymptotic_lp_limit.md # 2-step gap Markov chain proof (lim LP = 12)
+│   ├── 05_integer_complexity.md # N(n) = Theta(log n) and unbounded gap divergence
+│   └── 06_open_problems.md     # C17 boundary and 3-tier failure taxonomy
 ├── verifiers/                  # Self-contained Python verifiers
 │   ├── verify_all.py           # Master runner
 │   ├── verify_markov_chain.py  # Rational arithmetic Markov recurrence
