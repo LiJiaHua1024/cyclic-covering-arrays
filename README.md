@@ -20,6 +20,8 @@ This repository contains the unified research monograph, exact mechanical certif
 | **[T6] Asymptotic Gap Divergence** | $n \to \infty$ | $N(n) = \Theta(\log n) \implies G(n) = N(n) - LP(n) \to \infty$ | Coding theory / Lovász Local Lemma |
 | **[T7] $C_{17}$ Exact Optimum** | $n = 17$ | $LP(17) = 12, N(17) = 13$ (54,310-node exact DFS exclusion) | `verify_c17.py` |
 | **[T8] $C_{19}$ Exact Optimum** | $n = 19$ | $LP(19) = 12, N(19) = 13$ (726,693-node exact DFS exclusion); odd jump threshold $n^* \ge 21$ | `verify_c19.py` |
+| **[T9] Continuous Plateau $[13, 19]$** | $n \in [13, 19]$ | $N(n) \le 13$ for all 7 integers ($C_{16}, C_{18}$ 13-row witnesses); global threshold $n^* \ge 20$ | `verify_even_cycles_and_c21.py` |
+| **[T10] $C_{21}$ Bounds & Rigidity** | $n = 21$ | $N(21) \le 14$; 13-row near-miss (818/819 covered) proven rigid against all 1/2-row repairs | `verify_even_cycles_and_c21.py` |
 
 ---
 
@@ -38,6 +40,7 @@ To run individual verifiers:
 - **$C_{15}$ $\mathbb{F}_2$ Rank Certificate**: `python verifiers/verify_c15.py`
 - **$C_{17}$ Exact DFS Certificate**: `python verifiers/verify_c17.py`
 - **$C_{19}$ Exact DFS Certificate**: `python verifiers/verify_c19.py`
+- **Even Cycles & $C_{21}$ Bounds**: `python verifiers/verify_even_cycles_and_c21.py`
 
 ---
 
@@ -51,21 +54,26 @@ To run individual verifiers:
 │   ├── 03_finite_cases.md      # C13, C14, C15, C17, C19 exact certificates & obstructions
 │   ├── 04_asymptotic_lp_limit.md # 2-step gap Markov chain proof (lim LP = 12)
 │   ├── 05_integer_complexity.md # N(n) = Theta(log n) and unbounded gap divergence
-│   └── 06_open_problems.md     # C21 frontier and odd jump threshold n* >= 21
+│   └── 06_open_problems.md     # Plateau [13, 19], C21 frontier, and threshold n* >= 20
 ├── verifiers/                  # Self-contained Python verifiers
-│   ├── verify_all.py           # Master runner
+│   ├── verify_all.py           # Master runner (runs all 7 verifiers)
 │   ├── verify_markov_chain.py  # Rational arithmetic Markov recurrence
 │   ├── verify_c13.py           # C13 exact certificate
 │   ├── verify_c14.py           # C14 exact certificate
 │   ├── verify_c15.py           # C15 GF(2) rank certificate
 │   ├── verify_c17.py           # C17 exact 54,310-node DFS exclusion
 │   ├── verify_c17_boundary.py  # C17 barrier analysis (witness & Gram non-PSD)
-│   └── verify_c19.py           # C19 exact 726,693-node DFS exclusion
+│   ├── verify_c19.py           # C19 exact 726,693-node DFS exclusion
+│   └── verify_even_cycles_and_c21.py # C16, C18, C21 suites & 2-row repair check
 ├── data/                       # Concrete test suite constructions
 │   ├── solution_c13.txt        # 13x13 binary matrix
 │   ├── solution_c14.txt        # 13x14 binary matrix
 │   ├── solution_c15.txt        # 13x15 binary matrix
-│   └── solution_c19.txt        # 13x19 binary matrix
+│   ├── solution_c16.txt        # 13x16 binary matrix
+│   ├── solution_c17.txt        # (derived from verify_c17 upper bound)
+│   ├── solution_c18.txt        # 13x18 binary matrix
+│   ├── solution_c19.txt        # 13x19 binary matrix
+│   └── solution_c21.txt        # 14x21 binary matrix
 └── history/                    # Superseded bounds (80, 36, 144/11)
 ```
 

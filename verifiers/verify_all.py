@@ -37,6 +37,7 @@ def main():
         "verify_c15.py",
         "verify_c17.py",
         "verify_c19.py",
+        "verify_even_cycles_and_c21.py",
     ]
     all_ok = True
     for s in scripts:

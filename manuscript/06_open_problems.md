@@ -91,13 +91,29 @@ $$\boxed{LP(19) = 12, \qquad N(19) = 13, \qquad G(19) = 1.}$$
 
 ---
 
-## 5. Remaining Open Conjectures
+## 5. The Continuous Plateau $[13, 19]$ and the $C_{21}$ Frontier
 
-1. **The $C_{21}$ Frontier and the 14-Row Threshold**:
-   With $N(13) = N(14) = N(15) = N(17) = N(19) = 13$, the unit integrality gap $G(n) = 1$ is invariant across all small cycles up to $n=19$.
-   Is $n^* = 21$ the smallest odd cycle where $N(n^*)$ first transitions to $14$?
-2. **Even Cycle Classification**:
-   Does the 13-row rigidity extend to even cycles such as $C_{16}$ and $C_{18}$?
+### Resolution of Even Cycles ($C_{16}$ and $C_{18}$)
+Explicit 13-row binary covering arrays have been established for $C_{16}$ (464 valid pairs) and $C_{18}$ (594 valid pairs), recorded in `data/solution_c16.txt` and `data/solution_c18.txt`.
+Together with the exact values on odd cycles and $C_{14}$, this establishes that **every integer $n \in \{13, 14, 15, 16, 17, 18, 19\}$ satisfies $N(n) \le 13$**.
+Consequently, the global jump threshold satisfies:
+$$\boxed{n^*_{\text{global}} \ge 20.}$$
+
+### Boundary of $C_{21}$: 14-Row Witness and Near-Miss Rigidity
+On $C_{21}$ (819 valid pair requirements):
+1. **Explicit 14-Row Upper Bound**: Adding row $32800 = 2^5 + 2^{15}$ to a 13-row candidate yields a strictly valid 14-row covering array (`data/solution_c21.txt`), proving:
+   $$\boxed{12 \le LP(21) \le N(21) \le 14.}$$
+2. **Local Rigidity of the 13-Row Near-Miss**: The 13-row candidate satisfies 818 of 819 requirements, deficient only on $((5, 15), (1, 1))$. Exhaustive inspection over all 24,476 legal rows across 40,826 candidate pairs proves that **no 1-row or 2-row replacement can eliminate this deficit**.
+   Any valid 13-row solution on $C_{21}$ must diverge from this configuration by at least 3 rows.
+
+---
+
+## 6. Remaining Open Conjectures
+
+1. **The $C_{21}$ Exact Integer Jump**:
+   Does $C_{21}$ admit a 13-row solution at Hamming distance $\ge 3$, or is $N(21) = 14$, making $n^*_{\text{odd}} = 21$ the exact odd-cycle jump threshold?
+2. **Cycle $C_{20}$**:
+   Does $C_{20}$ admit a 13-row solution, or does the global jump occur at $n^*_{\text{global}} = 20$?
 3. **Exact LP 12-Attainment**:
    While $\lim_{n \to \infty} LP(n) = 12$ is proven, does there exist an infinite family of cycles where $LP(n)$ is strictly, identically equal to 12?
-   Verified independently in `verifiers/verify_c19.py`.
+   Verified independently in `verifiers/verify_even_cycles_and_c21.py`.
