@@ -1,31 +1,70 @@
-# Chapter 6: Open Problems and Boundary of $C_{17}$
+# Chapter 6: Open Problems, the Boundary of $C_{17}$, and Structural Barriers
 
-## 1. The Boundary of $C_{17}$
+## 1. The Boundary of $C_{17}$ and Why $N(17)=13$ Remains Open
 
 For $C_{17}$, tight configurations from $\{2, 3\}$-gap words correspond to $2a + 3b = 17 \implies (a, b) \in \{(7, 1), (4, 3), (1, 5)\}$.
-This generates exactly **119 tight rows partitioned into 7 rotation orbits of length 17**.
+This generates exactly **119 tight rows partitioned into 7 rotation orbits of length 17**:
 
-Preliminary MILP searches suggest that no 12-row integer solution exists, and an explicit 13-row solution is available.
-However, because no finite linear contradiction (as in $C_{13}$) or checkable rank certificate (as in $C_{15}$) has been established, we strictly state:
-$$12 \le N(17) \le 13$$
-and classify $G(17) = 1$ as an open problem pending an independent, solver-free certificate.
+| Orbit | Representative Mask | $P_2$ | $P_3$ | $P_4$ | $P_5$ | $P_6$ | $P_7$ | $P_8$ |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| $A$ | 18725 | 1 | 5 | 0 | 2 | 4 | 0 | 3 |
+| $B$ | 18773 | 4 | 3 | 3 | 2 | 4 | 2 | 3 |
+| $C$ | 19029 | 4 | 3 | 2 | 4 | 2 | 3 | 3 |
+| $D$ | 19093 | 4 | 3 | 2 | 4 | 1 | 5 | 2 |
+| $E$ | 19109 | 4 | 3 | 2 | 4 | 2 | 3 | 3 |
+| $F$ | 21141 | 4 | 3 | 1 | 6 | 0 | 5 | 2 |
+| $G$ | 21845 | 7 | 1 | 6 | 2 | 5 | 3 | 4 |
 
----
-
-## 2. A 3-Tier Classification Criterion on the LP Equality Facet
-
-Rather than speculating whether all odd cycles exhibit integrality gaps, the structural analysis across $C_{13}, C_{14}, C_{15}$ establishes a rigorous diagnostic hierarchy for 12-row existence:
-
-1. **Tier 1: Scored Distance Equations Contradict Non-negativity**:
-   As in $C_{13}$, the linear equations for distances 3, 4, 5 alone force a row multiplier to be negative, without examining other bivariate states.
-2. **Tier 2: Residual Interaction Bounds Force an Impossible Gram Matrix**:
-   As in $C_{15}$, the scored equations admit integer solutions, but the rigidity of residual pair counts forces a column Gram matrix $K = Y^T Y$ with $\operatorname{rank}_{\mathbb{F}_2}(K) \ge 13$, contradicting the 12-row budget.
-3. **Tier 3: Higher-Order Coverage Obstructions**:
-   As in $C_{14}$, the scored distances and simple Gram matrices do not directly fail; deeper modular obstructions and distinct-row capacity constraints obstruct 12 rows.
+Odd-cycle rigidity requires $\sum P_2 = 3 \times 17 = 51$, yielding:
+$$a = g - 1, \qquad b + c + d + e + f = 13 - 2g$$
 
 ---
 
-## 3. Asymptotic Conjectures
+## 2. Barrier 1: Scored Distance Equations are Satisfiable on $C_{17}$
 
-- **Exact 12-Attainment**: Does there exist an infinite subsequence of cycle lengths $n_k$ for which $LP(n_k)$ strictly equals 12?
-- **Integer Transition**: At what critical cycle length $n$ does the integer optimum first jump from $N(n) = 13$ to $N(n) = 14$?
+Unlike $C_{13}$ (where the scored distance equations directly forced a multiplier to equal $-1$), on $C_{17}$ there are **139 non-negative integer vectors** $(a, b, c, d, e, f, g)$ satisfying the required sum of 34 on distances 3, 4, and 5.
+Furthermore, **29 vectors** also satisfy the aggregate lower bounds ($\ge 34$) on distances 6, 7, and 8.
+
+More decisively, there exists an explicit set of **12 distinct rows**:
+$$\{18761, 21797, 37450, 38229, 42325, 43602, 43689, 74900, 76074, 84644, 86674, 87210\}$$
+which pairwise satisfies:
+- All distance 3, 4, 5 pairs covered **exactly 2 times**;
+- Every column sum $c_i = 5$;
+- Every distance-2 pair covered $t_i = 3$ times.
+
+However, this is *not* a valid covering array: its total coverage on distance 7 is only 27 (below the required 34).
+This explicitly proves that **Tier 1 (scored distance equations alone) cannot exclude 12 rows on $C_{17}$**.
+
+---
+
+## 3. Barrier 2: The Limit of Unconstrained $\mathbb{F}_2$ Rank Arguments
+
+Assuming all pairwise counts on distances 6, 7, 8 are in $\{2, 3\}$, and letting $E$ denote the pairs covered 3 times, the candidate Gram matrix takes the form:
+$$K = (I - A(C_{17}))^2 + 2J + A(E)$$
+Modulo 2, the unperturbed base matrix $I + A(\text{dist } 2)$ is invertible on $C_n$ whenever $3 \nmid n$ (such as $n=17$).
+
+Taking the orbit count vector $(a,b,c,d,e,f,g) = (3,0,0,5,0,0,4)$ allows residual edge counts $(3, 3, 1)$ on distances 6, 7, 8 respectively.
+Selecting the edge set:
+$$E = \{(7,13), (8,14), (9,15), (2,9), (1,8), (3,10), (14,5)\}$$
+produces a candidate matrix $K$ with:
+$$\operatorname{rank}_{\mathbb{F}_2}(K) = 12$$
+
+Thus, unlike $C_{15}$ (where *every* edge set forced rank $\ge 13$), on $C_{17}$ an unconstrained edge count argument **cannot force rank $\ge 13$**.
+However, this candidate matrix $K$ is algebraically **non-realizable**: the integer vector:
+$$z = (0, -1, -2, -1, 0, 1, 0, 0, 2, 2, 1, 0, 0, -1, -2, -1, 0)^T$$
+satisfies:
+$$z^T K z = -6 < 0$$
+violating the positive-semidefiniteness required of any true Gram matrix $K = Y^T Y$.
+
+---
+
+## 4. The Missing Step to Close $N(17)=13$
+
+The above barriers narrow the required proof strategy for $C_{17}$ to one of two paths:
+1. **Residual Coverage Exclusion**: Prove that no subset of 12 rows satisfying the distance 3, 4, 5 equalities can simultaneously satisfy the pairwise lower bounds ($\ge 2$) on distances 6, 7, 8 (noting that the witness fails distance 7).
+2. **Realizable Gram Matrix Contradiction**: Prove that all edge configurations $E$ arising from *actual binary rows* $Y$ violate positive semidefiniteness or force $\operatorname{rank}_{\mathbb{F}_2}(K) \ge 13$.
+
+Until a solver-free certificate along one of these paths is verified, the ledger strictly maintains:
+$$\boxed{12 \le N(17) \le 13}$$
+and classifies $N(17) = 13$ as an open problem.
+All calculations above are verified independently in `verifiers/verify_c17_boundary.py`.
