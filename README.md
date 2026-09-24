@@ -22,8 +22,8 @@ This repository contains the unified research monograph, exact mechanical certif
 | **[T8] $C_{19}$ Exact Optimum** | $n = 19$ | $LP(19) = 12, N(19) = 13$ (726,693-node exact DFS exclusion); odd jump threshold $n^* \ge 21$ | `verify_c19.py` |
 | **[T9] Continuous Plateau $[13, 22]$** | $n \in [13, 22]$ | $N(n) = 13$ for all 10 consecutive integers ($C_{16}, C_{18}, C_{20}, C_{21}, C_{22}$ exact witnesses); global threshold $n^* \ge 23$ | `verify_even_cycles_and_c21.py` |
 | **[T10] $C_{21}$ Exact Optimum** | $n = 21$ | $LP(21) = 12, N(21) = 13$ (CP-SAT tight exclusion & explicit 13-row witness) | `verify_even_cycles_and_c21.py`, `solve_c21.py` |
-| **[T11] $C_{20}$ Exact Optimum** | $n = 20$ | $LP(20) = 12, N(20) = 13$ (CP-SAT tight exclusion & explicit 13-row witness) | `verify_even_cycles_and_c21.py`, `solve_c20.py` |
-| **[T12] $C_{22}$ Exact Optimum & Plateau Saturation** | $n = 22$ | $LP(22) = 12, N(22) = 13$ (CP-SAT tight exclusion & explicit 13-row witness); $L_{\text{tight}}(13) = 22$ | `verify_even_cycles_and_c21.py`, `solve_c22.py` |
+| **[T12] $C_{22}$ Exact Optimum & 10-Integer Plateau** | $n = 22$ | $LP(22) = 12, N(22) = 13$ (CP-SAT tight exclusion & explicit 13-row witness); $C_{23}$ tight 13-row infeasible | `verify_even_cycles_and_c21.py`, `solve_c22.py` |
+
 
 ---
 

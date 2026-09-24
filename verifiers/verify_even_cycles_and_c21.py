@@ -34,6 +34,11 @@ SUITES[22] = [
     599205, 692821, 1198741, 1221970, 1354021, 1354057, 1397418,
     1398089, 2397332, 2435666, 2705748, 2774314, 2796202,
 ]
+SUITES[23] = [
+    1198677, 1348937, 2435749, 2446506, 2708821, 2795858, 2796201,
+    4805194, 4887188, 4891946, 5395620, 5547348, 5581458, 5589290,
+]
+
 
 
 
@@ -205,7 +210,13 @@ def main():
     assert not f22 and c22 == 902
     print("PASS: C22 verified (13 rows; 902 requirements covered >= 2).")
 
+    # Verify C23 (14 rows, 989 requirements)
+    f23, c23 = inspect(23, SUITES[23])
+    assert not f23 and c23 == 989
+    print("PASS: C23 verified (14 rows; 989 requirements covered >= 2).")
+
     # Verify C21 repair obstruction
+
     verify_c21_repair_obstruction()
 
     # Verify exact rational LP=12 witnesses for C20, C21, C22, C23

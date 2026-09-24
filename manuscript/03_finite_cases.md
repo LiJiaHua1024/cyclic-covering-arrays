@@ -263,8 +263,10 @@ $$\boxed{N(13) = N(14) = N(15) = N(16) = N(17) = N(18) = N(19) = N(20) = N(21) =
 **Theorem (10-Integer Continuous Plateau & Global Jump Threshold)**:
 Across ten consecutive integers $n \in [13, 22]$, the minimum test suite size remains rigidly invariant at $N(n) = 13$.
 Consequently, the smallest cycle length $n^*_{\text{global}}$ where the integer optimum first jumps to 14 or higher must satisfy:
-$$\boxed{n^*_{\text{global}} \ge 23.}$$
 Furthermore, the dual cycle capacity of 13 rows satisfies $L(13) \ge 22$.
-On $C_{23}$, CP-SAT tight search proves infeasibility in 18.78s, establishing that the tight-row capacity is strictly saturated at $L_{\text{tight}}(13) = 22$.
+On $C_{23}$, CP-SAT search confirms that no 13-row solution consisting entirely of tight rows exists (18.78s), while an explicit 14-row witness (`data/solution_c23.txt`, 989 requirements covered $\ge 2$) verifies $N(23) \le 14$.
+Thus, while $C_{22}$ admits a tight 13-row solution, $C_{23}$ admits no tight 13-row solution.
+Because Theorem T1 does not force rows in a 13-row solution to be tight, the possibility of non-tight 13-row solutions on $C_{23}$ remains open.
+
 
 

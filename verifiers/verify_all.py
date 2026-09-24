@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-"""Unified master verifier for all results in the cyclic covering array project.
+"""Unified master runner for all registered mechanical certificates in the cyclic covering array project.
 
-Runs:
-1. verify_markov_chain.py: Proves lim_{n->inf} LP(n) = 12 via exact 2-step gap Markov chain.
-2. verify_c13.py: Exact LP=12, N=13 integrality gap on C13 without row repeats.
-3. verify_c14.py: Exact LP=12, N=13 certificate on C14 with distinct rows.
+Executes all 8 independent standard-library verification scripts:
+1. verify_markov_chain.py: Rational arithmetic 2-step gap Markov recurrence (lambda=2).
+2. verify_c13.py: C13 exact LP=12, N=13 algebraic infeasibility certificate.
+3. verify_c14.py: C14 exact LP=12, N=13 modulo-7 congruence obstruction.
+4. verify_c15.py: C15 GF(2) rank obstruction across all 4823 edge sets.
+5. verify_c17.py: C17 bit-parallel 54,310-node DFS 12-row exclusion.
+6. verify_c19.py: C19 bit-parallel 726,693-node DFS 12-row exclusion & 13-row witness.
+7. verify_even_cycles_and_c21.py: C16-C22 13-row & C23 14-row integer witnesses, C21 2-row repair check, C20-C23 LP=12 rational certificates.
+8. verify_general_lambda.py: Finite exact verification tool checking 3900 scaled rational inequalities (n in 11..30, lambda in 1..5).
 """
+
 
 import subprocess
 import sys
@@ -48,8 +54,9 @@ def main():
 
     print("\n" + "="*50)
     if all_ok:
-        print("[✓] ALL MECHANICAL CERTIFICATES VERIFIED SUCCESSFULLY (PASS)")
+        print("[✓] ALL 8 REGISTERED MECHANICAL CERTIFICATES VERIFIED SUCCESSFULLY (PASS)")
         print("="*50)
+
         return 0
     else:
         print("[✗] SOME VERIFICATIONS FAILED")

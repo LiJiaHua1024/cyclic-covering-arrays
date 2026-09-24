@@ -129,14 +129,17 @@ From our exact theorems:
 - For $M = 12$: $L(12) = 12$ (since $N(12) \le 12$, and for all $n \ge 13$, $N(n) \ge 13$).
 - For $M = 13$: We have rigorously established:
   $$\boxed{L(13) \ge 22.}$$
-  Moreover, among tight rows, CP-SAT proves that $C_{23}$ with 13 tight rows is INFEASIBLE (18.78s), while 14 tight rows is OPTIMAL (4.86s, `data/solution_c23.txt`), establishing:
-  $$\boxed{L_{\text{tight}}(13) = 22.}$$
+  Moreover, among tight rows, $C_{22}$ admits a tight 13-row solution, whereas on $C_{23}$ CP-SAT proves that 13 tight rows is INFEASIBLE (18.78s), while 14 tight rows is OPTIMAL (4.86s, `data/solution_c23.txt`).
+  Establishing whether $L_{\text{tight}}(13) = 22$ holds across all $n$ requires establishing monotonicity or ruling out tight solutions for all $n > 23$.
 
 ### Open Problems and Conjectures
 
-1. **Exact Determination of $L(13)$ and the Jump Threshold**:
-   Does $C_{23}$ admit any non-tight 13-row solution, or is $N(23) = 14$, making $L(13) = 22$ and $n^*_{\text{global}} = 23$ the exact universal jump threshold?
-   Exhaustive check on the full universe of 64,079 legal rows on $C_{23}$ remains the active computational boundary.
+1. **Exact Determination of $L(13)$ and the Jump Threshold $n^*_{\text{global}}$**:
+   Does $C_{23}$ admit any non-tight 13-row solution, or is $N(23) = 14$?
+   By Theorem T1, any non-tight row incurs a potential penalty against the scoring bound $3P_3 + 2P_4 + P_5 \le 23$. The total pairwise demand on $C_{23}$ is $6 \times 2 \times 23 = 276$, whereas 13 rows can supply at most $13 \times 23 = 299$.
+   Thus, any valid 13-row suite on $C_{23}$ has a strict total deficit budget of at most $299 - 276 = 23$.
+   This deficit budget heavily constrains allowable non-tight configurations, providing a structured path to prune the 64,079 legal rows.
+
 
 2. **Finite Attainment of the Fractional Constant $\lim LP(n) = 12$**:
    Exact rational certificates now certify $LP(n) = 12$ across all $n \in [13, 24]$.
