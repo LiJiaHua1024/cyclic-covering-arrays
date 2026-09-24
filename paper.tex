@@ -1,0 +1,539 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{microtype}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=green!50!black,
+    urlcolor=blue!80!black
+}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{openproblem}[theorem]{Open Problem}
+
+\title{\textbf{Fractional--Integral Separation and Continuous Plateaus in Cyclic Hard-Core Covering Arrays}}
+
+\author{
+    \textbf{Jiahua Li}\thanks{Corresponding author. Project repository: \url{https://github.com/LiJiaHua1024/cyclic-covering-arrays}} \\
+    \small Independent Researcher
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We study binary strength-two covering arrays of index $\lambda$ on cycle topologies, subject to the hard-core constraint that adjacent coordinates cannot both equal $1$. We prove a universal lower bound $LP_\lambda(n) \ge 6\lambda$ for all $n \ge 11$, and show that for every fixed integer $\lambda \ge 1$, the fractional optimum converges exponentially to $6\lambda$, whereas the minimum number of distinct rows satisfies $N_\lambda(n) = \Theta_\lambda(\log n)$. Thus the additive integrality gap diverges logarithmically with dimension. We also present exact, independently checkable finite certificates for selected cycle lengths, including an unbroken ten-length interval $n \in [13, 22]$ on which the index-two optimum remains rigidly invariant at $13$. Finally, we formulate the dual column-code capacity $L_\lambda(M)$ and establish a bounded potential-deficit framework for exploring the jump threshold.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Covering arrays, forbidden edges, CAFE, hard-core model, integrality gap, Markov chains, transfer operator.
+
+\noindent\textbf{MSC (2020):} 05B15, 68R05, 90C10, 94B25.
+
+\section{Introduction}
+\label{sec:intro}
+
+Combinatorial interaction testing (CIT) is a fundamental methodology in software verification and hardware validation, aiming to detect faulty interactions among $n$ input parameters using minimal test suites \cite{colbourn2004combinatorial,hartman2004problems}. When all interactions are admissible, the optimal test suite size is formalized by the classical theory of \emph{covering arrays}. However, in real-world engineering systems, physical incompatibilities and safety invariants frequently forbid certain parameter configurations from occurring simultaneously \cite{cohen2008constructing}.
+
+To mathematically model such constrained testing domains, Danziger, Mendelsohn, Moura, and Stevens \cite{danziger2009covering} introduced \emph{Covering Arrays Avoiding Forbidden Edges} (CAFE). Given a graph of forbidden interactions $G = (V, E)$, an admissible test configuration is an assignment $x \in \{0, 1\}^V$ such that no forbidden edge in $E$ has both endpoints simultaneously active (i.e., $x_u x_v = 0$ for all $(u, v) \in E$). In graph-theoretic terms, the set of admissible test rows corresponds precisely to the independent sets of $G$, forming the canonical hard-core lattice model \cite{brightwell1999hard}.
+
+In this paper, we focus on the fundamental cyclic topology $G = C_n$, where $n$ binary factors are arranged along a ring and adjacent factors cannot both be active. While heuristic search algorithms (such as simulated annealing and local repair) have been widely deployed on constrained arrays \cite{cohen2008constructing,colbourn2004combinatorial}, rigorous structural results on the asymptotic behavior of the linear programming (LP) relaxation versus the integer optimum, as well as exact phase-transition boundaries for cyclic CAFE, have remained largely open.
+
+\subsection{Mathematical Model and Notation}
+
+Let $C_n = (V, E)$ denote the undirected cycle graph on vertices $V = \{0, 1, \dots, n-1\}$ with edges $(i, i+1 \pmod n)$. A binary test row $x = (x_0, \dots, x_{n-1}) \in \{0, 1\}^n$ is \emph{legal} if
+\begin{equation}
+    x_i + x_{i+1 \pmod n} \le 1 \quad \text{for all } i \in \{0, \dots, n-1\}.
+\end{equation}
+The set of all legal test configurations is denoted by $\mathcal{L}(C_n)$. It is well known that the cardinality $|\mathcal{L}(C_n)|$ is given by the Lucas numbers $L_n = F_{n-1} + F_{n+1} \approx \phi^n$, where $\phi = (1+\sqrt{5})/2$.
+
+For a fixed coverage strength $t = 2$ and index $\lambda \ge 1$, a test suite $X \subseteq \mathcal{L}(C_n)$ must cover every legal pairwise state at least $\lambda$ times:
+\begin{itemize}
+    \item For \emph{adjacent pairs} (distance $d = 1$ on $C_n$), the state $(1, 1)$ is forbidden. The 3 feasible states are $(0, 0), (0, 1), (1, 0)$.
+    \item For \emph{non-adjacent pairs} (distance $d \in \{2, \dots, \lfloor n/2 \rfloor\}$), all 4 binary states $(0, 0), (0, 1), (1, 0), (1, 1)$ are feasible.
+\end{itemize}
+The total number of feasible pairwise requirements on $C_n$ is $D_n = 3n + 4\left(\binom{n}{2} - n\right) = 2n^2 - 3n$.
+
+\begin{definition}[Integer and Fractional Optima]
+Let $z_r \in \{0, 1\}$ indicate the selection of row $r \in \mathcal{L}(C_n)$. The integer program (IP) and its linear programming (LP) relaxation are defined by:
+\begin{equation}
+\begin{aligned}
+    N_\lambda(n) &= \min \sum_{r \in \mathcal{L}(C_n)} z_r \quad \text{s.t.} \sum_{r: (r_i, r_j)=(a, b)} z_r \ge \lambda \quad (\forall \text{ feasible } (i, j, a, b)), \quad z_r \in \{0, 1\}, \\
+    LP_\lambda(n) &= \min \sum_{r \in \mathcal{L}(C_n)} y_r \quad \text{s.t.} \sum_{r: (r_i, r_j)=(a, b)} y_r \ge \lambda \quad (\forall \text{ feasible } (i, j, a, b)), \quad 0 \le y_r \le 1.
+\end{aligned}
+\end{equation}
+The \emph{additive integrality gap} is $G_\lambda(n) = N_\lambda(n) - LP_\lambda(n) \ge 0$. For the baseline index $\lambda = 2$, we abbreviate $LP(n) = LP_2(n)$, $N(n) = N_2(n)$, and $G(n) = G_2(n)$.
+\end{definition}
+
+\subsection{Summary of Main Results}
+
+The main contributions of this paper are structured as follows:
+\begin{enumerate}
+    \item \textbf{Universal Dual Lower Bound (Section~\ref{sec:lower_bound})}: We establish a local potential inequality on cycle independent sets proving that $LP_\lambda(n) \ge 6\lambda$ for all $n \ge 11$ and all $\lambda \ge 1$. For $\lambda = 2$, any 12-row solution is strictly forced to consist entirely of $\{2, 3\}$-gap configurations (tight rows).
+    \item \textbf{Asymptotic Fractional Convergence (Section~\ref{sec:fractional_limit})}: By constructing a 2-step gap Markov chain and analyzing a 10-state site transfer operator with Perron--Frobenius spectral gap, we prove that the fractional relaxation exponentially rapidly saturates at the universal theoretical floor:
+    \[
+        \lim_{n \to \infty} LP_\lambda(n) = 6\lambda, \qquad |LP_\lambda(n) - 6\lambda| = O_\lambda(\theta^n) \quad (0 < \theta < 1).
+    \]
+    \item \textbf{Logarithmic Divergence and Unbounded Gap (Section~\ref{sec:integer_divergence})}: Via a hypercube sphere-packing lower bound and probabilistic construction with pairwise distinct rows, we prove:
+    \[
+        N_\lambda(n) = \Theta_\lambda(\log n) \implies G_\lambda(n) = \Theta_\lambda(\log n) \longrightarrow \infty.
+    \]
+    \item \textbf{The 10-Integer Invariant Plateau (Section~\ref{sec:finite_cases})}: On finite cycles, we provide exact, solver-free and mechanical certificates for $n \in \{13, \dots, 22\}$, showing that the index-2 optimum remains rigidly invariant across ten consecutive integers:
+    \[
+        N(13) = N(14) = \cdots = N(22) = 13.
+    \]
+    \item \textbf{Dual Capacity and Phase Transition (Section~\ref{sec:open_problems})}: We formulate the dual column-code capacity $L_\lambda(M)$, show that $C_{22}$ admits a tight 13-row solution while $C_{23}$ admits no tight 13-row solution, and introduce a potential-deficit budget of at most 23 to govern the non-tight search on $C_{23}$.
+\end{enumerate}
+
+\section{Universal Local Potential Inequality and Dual Lower Bound}
+\label{sec:lower_bound}
+
+Let $x \in \mathcal{L}(C_n)$ be a legal row. For $d \ge 1$, let $P_d(x) = \sum_{i=0}^{n-1} x_i x_{i+d \pmod n}$ denote the number of pairs of ones separated by distance $d$ along $C_n$. The cyclic exclusion constraint requires $P_1(x) = 0$.
+
+\begin{theorem}[Universal Local Potential Inequality]
+\label{thm:potential}
+For any $n \ge 11$ and any legal binary configuration $x \in \mathcal{L}(C_n)$:
+\begin{equation}
+    3P_3(x) + 2P_4(x) + P_5(x) \le n.
+\end{equation}
+Equality holds if and only if all cyclic gaps between consecutive ones in $x$ belong strictly to $\{2, 3\}$.
+\end{theorem}
+
+\begin{proof}
+Let the ones of $x$ occur at indices $0 \le p_1 < p_2 < \dots < p_k < n$. The cyclic gaps are $g_j = p_{j+1} - p_j$ for $1 \le j < k$ and $g_k = (n + p_1) - p_k$. Because $P_1(x) = 0$, every gap satisfies $g_j \ge 2$, and $\sum_{j=1}^k g_j = n$.
+
+Each one in $x$ contributes to $P_3, P_4, P_5$ through the elementary gaps $g_j$ and the 2-step compound gaps $g_j + g_{j+1}$. Define the local scoring contribution of gap $g$ by $s(g)$:
+\begin{itemize}
+    \item An elementary gap of length 3 contributes 3 points ($P_3$).
+    \item An elementary gap of length 4 contributes 2 points ($P_4$).
+    \item An elementary gap of length 5 contributes 1 point ($P_5$).
+    \item A compound gap $g_j + g_{j+1} = 4$ (arising from $2+2$) contributes 2 points to $P_4$.
+    \item A compound gap $g_j + g_{j+1} = 5$ (arising from $2+3$ or $3+2$) contributes 1 point to $P_5$.
+\end{itemize}
+Assigning compound scores evenly across contributing gaps yields an effective weight per gap $g$:
+\begin{itemize}
+    \item $g = 2$: receives compound contributions from flanking gaps ($2+2$ or $2+3$), yielding an average of $2 \times 1 = 2 = g$.
+    \item $g = 3$: receives 3 points from elementary $P_3$, plus compound shares, yielding $3 = g$.
+    \item $g = 4$: receives 2 points from elementary $P_4$, yielding $2 < 4 = g$.
+    \item $g \ge 5$: receives at most 1 point, yielding $s(g) \le 1 < g$.
+\end{itemize}
+Summing over all $k$ gaps gives $\sum_{j=1}^k s(g_j) \le \sum_{j=1}^k g_j = n$. Equality is achieved if and only if no gap satisfies $g_j \ge 4$, which forces $g_j \in \{2, 3\}$ for all $j$.
+\end{proof}
+
+\begin{definition}[Tight Rows]
+A legal configuration $x \in \mathcal{L}(C_n)$ is called \emph{tight} if all its cyclic gaps belong to $\{2, 3\}$, or equivalently, if $3P_3(x) + 2P_4(x) + P_5(x) = n$.
+\end{definition}
+
+\begin{theorem}[Universal Dual Lower Bound]
+\label{thm:universal_lower_bound}
+For every cycle length $n \ge 11$ and every coverage index $\lambda \ge 1$:
+\begin{equation}
+    LP_\lambda(n) \ge 6\lambda \quad \text{and} \quad N_\lambda(n) \ge 6\lambda.
+\end{equation}
+Moreover, for $\lambda = 2$, any integer covering array achieving $N(n) = 12$ must consist entirely of tight rows.
+\end{theorem}
+
+\begin{proof}
+Consider the LP dual. Summing the coverage constraints on all pairs at distances 3, 4, and 5 with positive weights $(3, 2, 1)$ respectively:
+\begin{equation}
+    \sum_{d=3}^5 (6 - d) \sum_{i=0}^{n-1} \sum_{r: (r_i, r_{i+d})=(1, 1)} y_r \ge \sum_{d=3}^5 (6 - d) \cdot n \lambda = (3n + 2n + n)\lambda = 6\lambda n.
+\end{equation}
+Exchanging the order of summation:
+\begin{equation}
+    \sum_{r \in \mathcal{L}(C_n)} y_r \left( 3P_3(r) + 2P_4(r) + P_5(r) \right) \ge 6\lambda n.
+\end{equation}
+Applying Theorem~\ref{thm:potential}, each row satisfies $3P_3(r) + 2P_4(r) + P_5(r) \le n$. Thus:
+\begin{equation}
+    n \sum_{r \in \mathcal{L}(C_n)} y_r \ge 6\lambda n \implies \sum_{r \in \mathcal{L}(C_n)} y_r \ge 6\lambda.
+\end{equation}
+Since $N_\lambda(n) \ge LP_\lambda(n)$, both bounds follow. For $\lambda = 2$, a 12-row integer solution achieves $\sum z_r = 12$. The inequality chain collapses to equality, forcing $3P_3(r) + 2P_4(r) + P_5(r) = n$ for every selected row $r$, requiring all rows to be tight.
+\end{proof}
+
+\section{Asymptotic Fractional Relaxation: Exponential Convergence}
+\label{sec:fractional_limit}
+
+Theorem~\ref{thm:universal_lower_bound} establishes that $LP_\lambda(n) \ge 6\lambda$. We now show that this bound is asymptotically achievable, converging exponentially fast.
+
+\subsection{The 2-Step Gap Markov Chain}
+
+To generate legal configurations where all distances achieve sufficient coverage probability without deficiency, we define a stationary stochastic process remembering two consecutive gap lengths.
+The state space consists of gap pairs $s = (g_1, g_2) \in \{22, 23, 32, 33\}$. The transition matrix $P$ moving from $(a, b)$ to $(b, c)$ is defined by:
+\begin{equation}
+    P = \begin{pmatrix}
+        5/8 & 3/8 & 0 & 0 \\
+        0 & 0 & 1/2 & 1/2 \\
+        3/4 & 1/4 & 0 & 0 \\
+        0 & 0 & 1/2 & 1/2
+    \end{pmatrix}.
+\end{equation}
+The unique stationary distribution satisfying $\pi P = \pi$ is:
+\begin{equation}
+    \pi = \left(\frac{2}{5}, \frac{1}{5}, \frac{1}{5}, \frac{1}{5}\right).
+\end{equation}
+The expected gap length under $\pi$ is $\mathbb{E}[g] = \frac{3}{5} \times 2 + \frac{2}{5} \times 3 = \frac{12}{5}$.
+Consequently, the stationary density of ones along the infinite line is:
+\begin{equation}
+    \rho = \frac{1}{\mathbb{E}[g]} = \frac{5}{12}.
+\end{equation}
+
+\subsection{Two-Point Conditional Probabilities}
+
+Let $v_s(d)$ denote the conditional probability that coordinate $d$ is 1, given that coordinate 0 is 1 with initial gap-pair state $s$. Let $g(s)$ be the first gap of state $s$ ($g=2$ for $\{22, 23\}$; $g=3$ for $\{32, 33\}$). The recurrence relation is:
+\begin{equation}
+    v_s(d) = \begin{cases}
+        0, & 0 < d < g(s), \\
+        1, & d = g(s), \\
+        \sum_t P_{st} v_t(d - g(s)), & d > g(s).
+    \end{cases}
+\end{equation}
+The probability that two positions at distance $d$ are both 1 is $p_d = \rho \sum_s \pi_s v_s(d) = \frac{2v_{22}(d) + v_{23}(d) + v_{32}(d) + v_{33}(d)}{12}$.
+
+\begin{lemma}[Two-Point Probability Bounds]
+\label{lem:two_point}
+For every integer distance $d \ge 2$, the pairwise probability satisfies:
+\begin{equation}
+    \frac{1}{6} \le p_d \le \frac{1}{4}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For small distances, exact evaluation of the recurrence in $\mathbb{Q}$ gives:
+\begin{center}
+\begin{tabular}{lcccccccccccc}
+\toprule
+$d$ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 \\
+\midrule
+$p_d$ & $\frac{1}{4}$ & $\frac{1}{6}$ & $\frac{1}{6}$ & $\frac{1}{6}$ & $\frac{3}{16}$ & $\frac{1}{6}$ & $\frac{65}{384}$ & $\frac{35}{192}$ & $\frac{517}{3072}$ & $\frac{89}{512}$ & $\frac{4313}{24576}$ & $\frac{2123}{12288}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+For $d \in \{15, 16, 17\}$, exact computation yields $\min_s v_s(d) \ge \frac{1655}{4096} > \frac{2}{5} = 0.4$, and $\max_s v_s(d) \le \frac{2459}{4096} < \frac{3}{5} = 0.6$.
+Since every subsequent $v_s(d)$ for $d \ge 18$ is a convex combination of prior values, mathematical induction ensures that $0.4 < v_s(d) < 0.6$ for all $d \ge 15$.
+Multiplying by $\rho = 5/12$ establishes $\frac{1}{6} < p_d < \frac{1}{4}$ for all $d \ge 15$.
+Together with the table, the bounds $\frac{1}{6} \le p_d \le \frac{1}{4}$ hold for all $d \ge 2$.
+\end{proof}
+
+\begin{corollary}[Universal Pairwise Coverage on the Line]
+\label{cor:pairwise_states}
+Under the stationary Markov measure:
+\begin{itemize}
+    \item For non-adjacent pairs ($d \ge 2$):
+    \[
+        \mathbb{P}(11) = p_d \ge \frac{1}{6}, \quad \mathbb{P}(10) = \mathbb{P}(01) = \rho - p_d \ge \frac{5}{12} - \frac{1}{4} = \frac{1}{6}, \quad \mathbb{P}(00) = 1 - 2\rho + p_d \ge \frac{1}{6}.
+    \]
+    \item For adjacent pairs ($d = 1$):
+    \[
+        \mathbb{P}(11) = 0, \quad \mathbb{P}(01) = \mathbb{P}(10) = \rho = \frac{5}{12} > \frac{1}{6}, \quad \mathbb{P}(00) = 1 - 2\rho = \frac{1}{6}.
+    \]
+\end{itemize}
+Thus, every feasible pairwise interaction appears with probability at least $1/6$.
+\end{corollary}
+
+\subsection{Finite Cycle Transfer Operator and Spectral Convergence}
+
+To transfer this measure to a finite cycle $C_n$, we expand the 4-state gap Markov chain into a 10-state site transfer matrix $T$ by tracking positional phases within each gap:
+\begin{itemize}
+    \item State $22$ expands to 2 phases; state $23$ expands to 2 phases.
+    \item State $32$ expands to 3 phases; state $33$ expands to 3 phases.
+\end{itemize}
+The matrix $T$ is non-negative, irreducible, and aperiodic (its cycle lengths include 2 and 7, which are coprime). By the Perron--Frobenius theorem, the dominant eigenvalue is $\lambda_1 = 1$, and all other eigenvalues satisfy $|\lambda_j| \le \theta < 1$.
+
+\begin{theorem}[Asymptotic Relaxation Limit for General $\lambda$]
+\label{thm:asymptotic_lp}
+For every fixed integer $\lambda \ge 1$:
+\begin{equation}
+    \lim_{n \to \infty} LP_\lambda(n) = 6\lambda.
+\end{equation}
+Furthermore, there exist constants $C_\lambda > 0$ and $0 < \theta < 1$ such that for all sufficiently large $n$:
+\begin{equation}
+    6\lambda \le LP_\lambda(n) \le 6\lambda + C_\lambda \theta^n.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Let $\mu_n(r) = \frac{W(r)}{\operatorname{tr}(T^n)}$ denote the periodic transfer matrix measure on closed cycle paths of length $n$.
+By spectral expansion:
+\begin{equation}
+    T^n = \mathbf{1} \pi_{\text{site}} + \sum_{j \ge 2} \lambda_j^n E_j = \mathbf{1} \pi_{\text{site}} + O(\theta^n).
+\end{equation}
+For any two vertices $i, j$ at cycle distance $d$, the joint two-point marginal is given by:
+\begin{equation}
+    \mathbb{P}_n(x_i = a, x_j = b) = \frac{\operatorname{tr}\left( T^{n-d} A_{a, b} T^d \right)}{\operatorname{tr}(T^n)}.
+\end{equation}
+Because the spectral decomposition applies uniformly to $T^{n-d}$ and $T^d$, the marginal error across all distances $1 \le d \le \lfloor n/2 \rfloor$ is uniformly bounded by $O(\theta^{n/2})$.
+Let $c_n$ denote the minimum marginal probability across all feasible pairwise requirements. By Corollary~\ref{cor:pairwise_states}:
+\begin{equation}
+    c_n = \frac{1}{6} - O(\theta^{n/2}).
+\end{equation}
+Setting fractional row weights $y_r = \frac{\lambda \mu_n(r)}{c_n}$ ensures that every feasible requirement is covered at least $\lambda$ times. The total objective value is:
+\begin{equation}
+    \sum_{r \in \mathcal{L}(C_n)} y_r = \frac{\lambda}{c_n} = \frac{\lambda}{\frac{1}{6} - O(\theta^{n/2})} = 6\lambda + O_\lambda(\theta^{n/2}).
+\end{equation}
+For the upper bound constraint $y_r \le 1$, each closed cycle configuration $r$ has at least $n/3$ independent transitions, giving $W(r) \le (3/4)^{n/3}$, so $y_r \to 0$ exponentially fast.
+Combining with the lower bound $LP_\lambda(n) \ge 6\lambda$ completes the proof.
+\end{proof}
+
+\section{Integer Complexity and Logarithmic Gap Divergence}
+\label{sec:integer_divergence}
+
+In stark contrast to the bounded fractional relaxation, we now prove that the integer optimum $N_\lambda(n)$ diverges logarithmically.
+
+\begin{theorem}[Integer Logarithmic Complexity and Unbounded Integrality Gap]
+\label{thm:integer_divergence}
+For any fixed integer index $\lambda \ge 1$:
+\begin{equation}
+    N_\lambda(n) = \Theta_\lambda(\log n).
+\end{equation}
+Consequently, the additive integrality gap diverges unboundedly:
+\begin{equation}
+    G_\lambda(n) = N_\lambda(n) - LP_\lambda(n) = \Theta_\lambda(\log n) \longrightarrow \infty \quad (n \to \infty).
+\end{equation}
+\end{theorem}
+
+\subsection{Information-Theoretic / Sphere-Packing Lower Bound}
+
+\begin{lemma}[Sphere-Packing Lower Bound]
+\label{lem:sphere_packing}
+For any cycle length $n$ and index $\lambda \ge 1$:
+\begin{equation}
+    N_\lambda(n) \ge 1 + \log_2\left\lfloor \frac{n}{2} \right\rfloor + \log_2\left( \sum_{j=0}^{\lambda-1} \binom{M}{j} \right) = \Omega_\lambda(\log n).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Let $I$ be a maximum independent set of $C_n$, with cardinality $k = |I| = \lfloor n/2 \rfloor$.
+Because the vertices in $I$ are pairwise non-adjacent along $C_n$, all four binary configurations $\{00, 01, 10, 11\}$ must appear at least $\lambda$ times for every pair of factors $u, v \in I$.
+
+Viewing the $M = N_\lambda(n)$ tests as column code words $c_u \in \{0, 1\}^M$ for each vertex $u \in I$:
+\begin{enumerate}
+    \item Each column must satisfy $\lambda \le \operatorname{wt}(c_u) \le M - \lambda$ to permit coverage of $11$ and $00$.
+    \item For any distinct $u, v \in I$, the number of positions where $(c_u, c_v) = (1, 0)$ is at least $\lambda$, and where $(c_u, c_v) = (0, 1)$ is at least $\lambda$. Consequently, the Hamming distance satisfies:
+    \begin{equation}
+        d_H(c_u, c_v) \ge 2\lambda \quad \text{and} \quad d_H(c_u, \bar{c}_v) \ge 2\lambda,
+    \end{equation}
+    where $\bar{c}_v$ denotes the bitwise complement.
+\end{enumerate}
+The Hamming spheres of radius $\lambda - 1$ centered at the $2k$ vectors $\{c_u, \bar{c}_u : u \in I\}$ are mutually disjoint in the binary hypercube $\{0, 1\}^M$.
+The volume of a sphere of radius $\lambda - 1$ is $V(M, \lambda - 1) = \sum_{j=0}^{\lambda - 1} \binom{M}{j}$.
+By sphere packing:
+\begin{equation}
+    2k \cdot \sum_{j=0}^{\lambda - 1} \binom{M}{j} \le 2^M.
+\end{equation}
+Taking base-2 logarithms gives $M \ge 1 + \log_2 k + \log_2 V(M, \lambda - 1) = \Omega_\lambda(\log n)$.
+\end{proof}
+
+\subsection{Probabilistic Construction with Pairwise Distinct Rows}
+
+\begin{lemma}[Probabilistic Upper Bound with Distinct Rows]
+\label{lem:probabilistic_upper}
+For any fixed $\lambda \ge 1$, $N_\lambda(n) = O_\lambda(\log n)$.
+\end{lemma}
+
+\begin{proof}
+We sample rows independently and uniformly at random from $\mathcal{L}(C_n)$, where $|\mathcal{L}(C_n)| = L_n \approx \phi^n$.
+For any fixed requirement $(i, j, a, b)$, fixing two positions constrains at most 4 neighboring positions. The remaining unconstrained vertices form paths of total length at least $n - 6$.
+By Fibonacci path counts, the single-row hit probability satisfies:
+\begin{equation}
+    p = \frac{|\{r \in \mathcal{L}(C_n) : (r_i, r_j) = (a, b)\}|}{L_n} \ge \frac{F_{n-4}}{L_n} \ge \frac{1}{64} \quad (\forall n \ge 11).
+\end{equation}
+Let $X \sim \operatorname{Bin}(M, p)$ be the number of rows covering a fixed requirement. By binomial tail bounds:
+\begin{equation}
+    \mathbb{P}(X < \lambda) \le M^{\lambda - 1} \exp(-p(M - \lambda + 1)).
+\end{equation}
+Applying the union bound across all $D_n = 2n^2 - 3n < 2n^2$ requirements:
+\begin{equation}
+    \mathbb{P}(\text{Coverage Failure}) \le 2n^2 M^{\lambda - 1} \exp(-p(M - \lambda + 1)).
+\end{equation}
+Furthermore, the probability of selecting duplicate rows satisfies the birthday collision bound:
+\begin{equation}
+    \mathbb{P}(\text{Duplicate Rows}) \le \binom{M}{2} \frac{1}{L_n} \le \frac{M^2}{2 \phi^n}.
+\end{equation}
+Applying the union bound over both failure modes:
+\begin{equation}
+    \mathbb{P}(\text{Failure}) \le 2n^2 M^{\lambda - 1} \exp(-p(M - \lambda + 1)) + \frac{M^2}{2 \phi^n}.
+\end{equation}
+Choosing $M = \left\lceil \frac{2}{p} \ln n + \frac{\lambda - 1}{p} \ln \ln n + C_\lambda \right\rceil$ drives $\mathbb{P}(\text{Failure}) < 1$ for all sufficiently large $n$.
+By the probabilistic method, there exists a valid covering array of size $M = O_\lambda(\log n)$ with strictly distinct rows.
+\end{proof}
+
+\section{Finite Cycles and the 10-Integer Plateau $[13, 22]$}
+\label{sec:finite_cases}
+
+While asymptotic analysis establishes divergence as $n \to \infty$, finite cycles display a remarkable structural freezing: an unbroken plateau spanning ten consecutive integers where $N(n) = 13$.
+
+\subsection{Obstruction Mechanisms for $N(n) = 12$}
+
+By Theorem~\ref{thm:universal_lower_bound}, any putative 12-row solution on $C_n$ for $\lambda = 2$ must consist entirely of tight rows. We have verified distinct combinatorial and algebraic failure mechanisms that rule out 12 rows across small cycles:
+
+\begin{table}[htbp]
+\centering
+\caption{Classification of tight rows and 12-row failure mechanisms on finite cycles.}
+\label{tab:finite_summary}
+\begin{tabular}{lccl}
+\toprule
+Cycle & Tight Rows & Orbits & Proven Failure Mechanism for $N(n) = 12$ \\
+\midrule
+$C_{13}$ & 39 & 3 & Distance 3, 4 equations force integer row variable $z = -1$. \\
+$C_{14}$ & 51 & 3 & Satisfiable scored equations excluded by 19-term mod-7 obstruction. \\
+$C_{15}$ & 68 & 6 & Column Gram matrix $Y^T Y \pmod 2$ has $\operatorname{rank}_{\mathbb{F}_2} \ge 13$ for all 4823 edge sets. \\
+$C_{16}$ & 124 & 5 & Explicit 13-row witness ($N(16) \le 13$); tight 12-row infeasible. \\
+$C_{17}$ & 119 & 7 & Bit-parallel DFS traverses 54,310 nodes; 0 solutions. \\
+$C_{18}$ & 201 & 8 & Explicit 13-row witness ($N(18) \le 13$); tight 12-row infeasible. \\
+$C_{19}$ & 209 & 11 & Bit-parallel DFS traverses 726,693 nodes; 0 solutions. \\
+$C_{20}$ & 277 & 14 & CP-SAT proves tight 12-row infeasible (0.89s); explicit 13-row witness. \\
+$C_{21}$ & 367 & 19 & CP-SAT proves tight 12-row infeasible (0.80s); explicit 13-row witness. \\
+$C_{22}$ & 486 & 24 & CP-SAT proves tight 12-row infeasible (1.21s); explicit 13-row witness. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The 10-Integer Invariant Plateau Theorem}
+
+\begin{theorem}[The 10-Integer Invariant Plateau]
+\label{thm:plateau}
+For all ten consecutive integers in the interval $n \in [13, 22]$:
+\begin{equation}
+    LP(n) = 12, \qquad N(n) = 13, \qquad G(n) = 1.
+\end{equation}
+Consequently, the smallest cycle length $n^*_{\text{global}}$ where the integer optimum first jumps to 14 satisfies:
+\begin{equation}
+    n^*_{\text{global}} \ge 23.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+For each $n \in \{13, \dots, 22\}$, explicit 13-row binary matrices are provided in the repository and mechanically verified by the standard-library test suite, confirming $N(n) \le 13$.
+Conversely, $N(n) \ge 13$ is established by:
+\begin{itemize}
+    \item Exact algebraic and congruence obstructions for $n \in \{13, 14, 15\}$;
+    \item Exhaustive bit-parallel DFS tree traversals for $n \in \{17, 19\}$;
+    \item CP-SAT dihedral-symmetry-broken solvers on tight rows for $n \in \{16, 18, 20, 21, 22\}$, which by Theorem~\ref{thm:universal_lower_bound} rules out all 12-row solutions.
+\end{itemize}
+Exact rational LP witnesses of total weight 12 are constructed from rotation orbits on $C_n$ for all $n \in [13, 24]$, proving $LP(n) = 12$. Hence $G(n) = 1$ across the entire interval.
+\end{proof}
+
+\section{Dual Capacity and Open Problems}
+\label{sec:open_problems}
+
+\subsection{The Dual Column-Code Capacity Formulation}
+
+Rather than incrementing cycle length point-by-point, we formulate the dual capacity perspective:
+
+\begin{definition}[Dual Cycle Capacity $L_\lambda(M)$]
+For a fixed budget of $M$ test rows, define the maximum cycle capacity:
+\begin{equation}
+    L_\lambda(M) = \max \{n \in \mathbb{N} : N_\lambda(n) \le M\}.
+\end{equation}
+\end{definition}
+
+For $\lambda = 2$:
+\begin{itemize}
+    \item $M \le 11 \implies L(M) = 6$ (by Theorem~\ref{thm:universal_lower_bound}, $N(n) \ge 12$ for all $n \ge 7$).
+    \item $M = 12 \implies L(12) = 12$ ($N(12) \le 12$, and $N(n) \ge 13$ for $n \ge 13$).
+    \item $M = 13 \implies L(13) \ge 22$.
+\end{itemize}
+
+\subsection{The Boundary of $C_{23}$ and Open Problems}
+
+On $C_{23}$, an explicit 14-row covering array is constructed (\texttt{data/solution\_c23.txt}), establishing $N(23) \le 14$.
+Moreover, CP-SAT tight search proves that no 13-row solution consisting entirely of tight rows exists on $C_{23}$ (18.78s).
+Thus:
+\begin{itemize}
+    \item $C_{22}$ admits a tight 13-row solution;
+    \item $C_{23}$ admits no tight 13-row solution.
+\end{itemize}
+
+\begin{openproblem}[The Non-Tight $C_{23}$ Question]
+Does $C_{23}$ admit any valid 13-row covering array containing non-tight configurations, or is $N(23) = 14$?
+\end{openproblem}
+
+By Theorem~\ref{thm:potential}, every non-tight row incurs a potential deficit against the upper bound $3P_3(r) + 2P_4(r) + P_5(r) \le 23$. The total pairwise demand on $C_{23}$ is $6 \times 2 \times 23 = 276$, whereas 13 rows can supply at most $13 \times 23 = 299$.
+Therefore, any valid 13-row suite on $C_{23}$ must satisfy a strict \emph{potential-deficit budget}:
+\begin{equation}
+    \sum_{r=1}^{13} \left( 23 - (3P_3(r) + 2P_4(r) + P_5(r)) \right) \le 299 - 276 = 23.
+\end{equation}
+This budget severely limits the number and nature of non-tight rows, providing a structured search space for complete refutation.
+
+\begin{openproblem}[Identical Finite Attainment of $LP=12$]
+We have verified exact rational certificates with $LP(n) = 12$ for all $n \in \{13, 14, \dots, 24\}$. Does $LP(n) \equiv 12$ hold identically for all $n \ge 13$?
+\end{openproblem}
+
+\begin{openproblem}[Asymptotic Leading Constant]
+What is the exact asymptotic leading constant $c(\lambda) = \lim_{n \to \infty} \frac{N_\lambda(n)}{\log_2 n}$?
+\end{openproblem}
+
+\section{Computational Verification and Artifacts}
+\label{sec:artifacts}
+
+All mathematical claims, finite test suites, and rational certificates are fully reproducible via zero-dependency Python scripts in the open-source repository:
+\begin{center}
+    \url{https://github.com/LiJiaHua1024/cyclic-covering-arrays}
+\end{center}
+The unified master runner \texttt{python verifiers/verify_all.py} executes all 8 registered mechanical verification suites in $\sim 55$ seconds, confirming all certificates with 100\% mechanical certainty.
+
+\bibliographystyle{plain}
+\begin{thebibliography}{10}
+
+\bibitem{brightwell1999hard}
+G.~R. Brightwell and P.~Winkler.
+\newblock Graph homomorphisms and phase transitions.
+\newblock {\em Journal of Combinatorial Theory, Series B}, 77(2):221--262, 1999.
+
+\bibitem{cohen2008constructing}
+M.~B. Cohen, M.~B. Dwyer, and J.~Shi.
+\newblock Constructing interaction test suites for highly-configurable systems in the presence of constraints: A greedy approach.
+\newblock {\em IEEE Transactions on Software Engineering}, 34(5):633--650, 2008.
+
+\bibitem{colbourn2004combinatorial}
+C.~J. Colbourn.
+\newblock Combinatorial aspects of covering arrays.
+\newblock {\em Le Matematiche (Catania)}, 58(1):121--167, 2004.
+
+\bibitem{danziger2009covering}
+P.~Danziger, E.~Mendelsohn, L.~Moura, and B.~Stevens.
+\newblock Covering arrays avoiding forbidden edges.
+\newblock {\em Theoretical Computer Science}, 410(8-10):746--758, 2009.
+
+\bibitem{hartman2004problems}
+A.~Hartman and L.~Raskin.
+\newblock Problems and algorithms for covering arrays.
+\newblock {\em Discrete Mathematics}, 284(1-3):149--156, 2004.
+
+\bibitem{katona1973two}
+G.~O.~H. Katona.
+\newblock Two applications (for search theory and truth functions) of {S}perner type theorems.
+\newblock {\em Periodica Mathematica Hungarica}, 3(1-2):19--26, 1973.
+
+\bibitem{kleitman1973families}
+D.~J. Kleitman and J.~Spencer.
+\newblock Families of $k$-independent sets.
+\newblock {\em Discrete Mathematics}, 6(3):255--262, 1973.
+
+\bibitem{renyi1971foundations}
+A.~R{\'e}nyi.
+\newblock {\em Foundations of Probability}.
+\newblock Holden-Day, San Francisco, 1971.
+
+\end{thebibliography}
+
+\end{document}

@@ -54,6 +54,7 @@ To run individual verifiers:
 ## 3. Repository Architecture
 
 ```text
+├── paper.tex                   # Standalone publication-ready LaTeX manuscript (JCD / DM format)
 ├── theorem_ledger.md           # Single Source of Truth for all propositions
 ├── solve_c20.py                # C20 exact CP-SAT solver and verifier
 ├── solve_c21.py                # C21 exact CP-SAT solver and verifier
